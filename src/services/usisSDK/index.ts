@@ -1,6 +1,4 @@
 import apiClient from './apiClient';
-import dotenv from 'dotenv';
-dotenv.config();
 
 export default class UsisSDK {
 	async getClassSchedule(courseCode?: string, academiaSession: string = '627124') {
@@ -13,6 +11,7 @@ export default class UsisSDK {
 			sidx: '',
 			sord: 'asc',
 			academiaSession,
+			query: courseCode,
 		};
 		const response = await apiClient.get('studentCourse/showClassScheduleInTabularFormatInGrid', params);
 		return response.data;
