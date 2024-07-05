@@ -23,7 +23,6 @@ export const sendEmail = async ({ email, mailtype, userID }: any) => {
 			from: process.env.EMAIL_USER,
 			to: email,
 
-			//check this line of code ********************
 			subject: mailtype === 'verify' ? 'Verify your email' : 'Reset your password',
 			html: `<p>Click <a href='${process.env.DOMAIN}/verifyemail?token=${hashedToken}'>here</a> to $ {mailtype === 'Verify'? 'verify your email': 'Reset your password'} or copy and paste the link belwo in your braower.<br>${process.env.DOMAIN}/verifyemail?token=${hashedToken} </p>`,
 		};
