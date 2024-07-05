@@ -11,7 +11,7 @@ export default class UsisSDK {
 		const params = {
 			year,
 		};
-		const response = await this.ApiClient.post('academiaSession/getAllSessionByYear', params);
+		const response = await this.ApiClient.post('academiaSession/getAllSessionByYear', null, { params });
 		return response.data;
 	}
 
@@ -31,24 +31,20 @@ export default class UsisSDK {
 	}
 
 	async getAdvisedCourse() {
-		const params = {}
+		const params = {};
 
-		const response = await this.ApiClient.post('studentCourse/advisedCourse', params);
+		const response = await this.ApiClient.post('studentCourse/advisedCourse', null, { params });
 		return response.data;
-
 	}
-
 
 	async showGradesheet() {
-		const params = {}
+		const params = {};
 
-		const response = await this.ApiClient.post('studentCourse/loadPreviousResultByStuden', params);
+		const response = await this.ApiClient.post('studentCourse/loadPreviousResultByStuden', null, { params });
 		return response.data;
-
 	}
 
-
-	async getSeatStatus(courseCode: string, academiaSession: string = '627124') {
+	async getSeatStatus(courseCode?: string, academiaSession: string = '627124') {
 		const params = {
 			query: courseCode,
 			academiaSession,
