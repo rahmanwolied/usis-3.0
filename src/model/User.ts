@@ -7,10 +7,10 @@ export interface User extends Document {
 	isFaculty: boolean;
 	isAdmin: boolean;
 	isVerified: boolean;
-	verifyCode: string;
-	verifyCodeExpiration: Date;
-	resetPasswordCode: string;
-	resetPasswordCodeExpiration: Date;
+	verifyCode: string | null;
+	verifyCodeExpiration: Date | null;
+	resetPasswordCode: string | null;
+	resetPasswordCodeExpiration: Date | null;
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -40,16 +40,16 @@ const UserSchema: Schema<User> = new Schema({
 		default: false,
 	},
 	verifyCode: {
-		type: String,
+		type: String || null,
 	},
 	verifyCodeExpiration: {
-		type: Date,
+		type: Date || null,
 	},
 	resetPasswordCode: {
-		type: String,
+		type: String || null,
 	},
 	resetPasswordCodeExpiration: {
-		type: Date,
+		type: Date || null,
 	},
 });
 
