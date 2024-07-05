@@ -7,8 +7,8 @@ import { sendEmail } from '@/utilities/mailer';
 export async function POST(request: NextRequest) {
 	connect();
 	try {
-		const reqBody = await request.json();
-		const { username, email, password } = reqBody;
+		const reqBody = await request.json()
+		const { username, email, password } = reqBody
 		//Validation
 		console.log(reqBody);
 
