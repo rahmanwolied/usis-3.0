@@ -29,4 +29,37 @@ export default class UsisSDK {
 		const response = await this.ApiClient.get('studentCourse/showClassScheduleInTabularFormatInGrid', params);
 		return response.data;
 	}
+
+	async getAdvisedCourse() {
+		const params = {}
+
+		const response = await this.ApiClient.post('studentCourse/advisedCourse', params);
+		return response.data;
+
+	}
+
+
+	async showGradesheet() {
+		const params = {}
+
+		const response = await this.ApiClient.post('studentCourse/loadPreviousResultByStuden', params);
+		return response.data;
+
+	}
+
+
+	async getSeatStatus(courseCode: string, academiaSession: string = '627124') {
+		const params = {
+			query: courseCode,
+			academiaSession,
+			_search: 'false',
+			nd: '',
+			rows: -1,
+			page: 1,
+			sidx: '',
+			sord: 'desc',
+		};
+		const response = await this.ApiClient.get('studentCourse/showCourseStatusList', params);
+		return response.data;
+	}
 }
