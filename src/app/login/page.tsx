@@ -10,7 +10,7 @@ function Page() {
 		<form>
 			<div className="h-screen flex flex-col items-center justify-center space-y-4">
 				<LoginForm />
-				<GoogleButton onClick={() => signIn('google')} />
+				<GoogleButton onClick={() => signIn('google', { callbackUrl: '/profile' })} />
 				<Footer />
 			</div>
 		</form>

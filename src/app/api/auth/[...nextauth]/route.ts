@@ -35,12 +35,15 @@ export const authOptions = {
 						console.log('User signed up successfully');
 						return user;
 					}
-				} catch (error) {
+				} catch (error: any) {
 					console.error('Error while signing in with google');
 
 					console.log(error.response.data);
 				}
 			}
+		},
+		async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
+			return url.startsWith(baseUrl) ? url : baseUrl + '/profile';
 		},
 	},
 	secret: process.env.SECRET || '',
