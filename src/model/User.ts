@@ -3,8 +3,10 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface User extends Document {
 	username: string;
 	email: string;
+	image: string;
 	password: string;
 	isFaculty: boolean;
+	name: string;
 	isAdmin: boolean;
 	isVerified: boolean;
 	verifyCode: string | null;
@@ -16,16 +18,21 @@ export interface User extends Document {
 const UserSchema: Schema<User> = new Schema({
 	username: {
 		type: String,
-		required: [true, 'Please provide a username'],
+		required: [false, 'Please provide a username'],
 	},
+	name: String,
 	email: {
 		type: String,
 		required: [true, 'Please provide an email'],
 		unique: true,
 	},
+	image: {
+		type: String,
+		default: 'default.jpg',
+	},
 	password: {
 		type: String,
-		required: [true, 'Please provide a password'],
+		required: [false, 'Please provide a password'],
 	},
 	isFaculty: {
 		type: Boolean,

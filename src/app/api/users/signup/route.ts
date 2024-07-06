@@ -7,8 +7,8 @@ import { sendEmail } from '@/utilities/mailer';
 export async function POST(request: NextRequest) {
 	connect();
 	try {
-		const reqBody = await request.json()
-		const { username, email, password } = reqBody
+		const reqBody = await request.json();
+		const { username, email, password, image, name } = reqBody;
 		//Validation
 		console.log(reqBody);
 
@@ -21,9 +21,11 @@ export async function POST(request: NextRequest) {
 		const hashedPassword = await bcryptjs.hash(password, salt);
 
 		const newUser = new User({
-			username,
+			username: username ? username : email.split('@')[0],
 			email,
 			password: hashedPassword,
+			image: image ? image : undefined,
+			name: name ? name : '',
 		});
 		const savedUser = await newUser.save();
 		console.log(savedUser);

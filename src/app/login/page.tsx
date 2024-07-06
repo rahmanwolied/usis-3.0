@@ -6,15 +6,15 @@ import LoginForm from './components/login-form'; // Adjust the path as necessary
 import Footer from './components/footer'; // Adjust the path as necessary
 
 function Page() {
-    return (
-        <form>
-            <div className="h-screen flex flex-col items-center justify-center space-y-4">
-                <LoginForm />
-                <GoogleButton onClick={() => signIn('google')} />
-                <Footer />
-            </div>
-        </form>
-    );
+	return (
+		<form>
+			<div className="h-screen flex flex-col items-center justify-center space-y-4">
+				<LoginForm />
+				<GoogleButton onClick={() => signIn('google')} />
+				<Footer />
+			</div>
+		</form>
+	);
 }
 
 export default Page;
