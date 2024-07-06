@@ -3,6 +3,7 @@ import { randomBytes } from 'crypto';
 import nextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import User from '@/model/User';
+import { connect } from '@/lib/dbConfig';
 
 export const authOptions = {
 	providers: [
@@ -23,6 +24,7 @@ export const authOptions = {
 						name: user.name,
 						password: randomBytes(16).toString('hex'),
 					};
+					await connect();
 					const userExists = await User.findOne({ email: _user.email });
 					if (userExists) {
 						console.log('User already exists');
@@ -39,9 +41,6 @@ export const authOptions = {
 					console.log(error.response.data);
 				}
 			}
-		},
-		async redirect({ url, baseUrl }) {
-			return url.startsWith(baseUrl) ? url : `${baseUrl}/profile`;
 		},
 	},
 	secret: process.env.SECRET || '',
