@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false); // New state to toggle password visibility
 
-    const handleSubmit = async (event:any) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
-        // Implement login logic here
-        // This could involve calling an API endpoint or using a library like next-auth
     };
 
     return (
@@ -23,14 +23,25 @@ export default function LoginForm() {
             />
 
             <label htmlFor="password">Password:</label>
-            <input
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="border p-2 rounded"
-            />
+            <div className="flex items-center border p-2 rounded">
+                <input
+                    type={showPassword ? "text" : "password"} // Toggle between text and password
+                    id="password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="flex-1"
+                />
+                 
+
+                <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="ml-2"
+                >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+            </div>
 
             <button type="submit" className="mt-4">Log In</button>
         </form>

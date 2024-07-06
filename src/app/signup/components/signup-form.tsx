@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Step 1: Import icons
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function SignupForm() {
     const [showPassword, setShowPassword] = useState(false);
