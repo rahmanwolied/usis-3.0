@@ -1,18 +1,21 @@
+'use client';
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useRouter } from 'next/navigation'; 
+import router from 'next/router';
 
 export default function SignupForm() {
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
-    const [formData, setFormData] = useState({ /* form fields state */ });
+    const [formData, setFormData] = useState({});
 
     const handleSubmit = async (event:any) => {
-        event.preventDefault(); // Prevent default form submission behavior
+        event.preventDefault();
 
         try {
-            const response = await fetch('/api/users/signup', { // Adjust the path if necessary
+            const response = await fetch('/api/users/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -25,13 +28,14 @@ export default function SignupForm() {
             }
 
             const data = await response.json();
-            console.log(data); // Handle success
+            console.log(data); 
+            router.push('/login');
         } catch (error) {
             console.error('There was a problem with your fetch operation:', error);
         }
     };
 
-    // Update formData based on form changes
+
     const handleChange = (event:any) => {
         const { name, value } = event.target;
         setFormData(prevState => ({

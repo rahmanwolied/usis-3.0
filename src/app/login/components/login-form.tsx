@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { Button } from "@/components/ui/button";
 
 export default function LoginForm() {
     const [email, setEmail] = useState('');
@@ -45,7 +46,7 @@ export default function LoginForm() {
                     </button>
                 </div>
 
-                <button type="submit" className="mt-4">Log In</button>
+                <Button type="submit" className="mt-4">Log In</Button>
             </form>
         </>
     );
