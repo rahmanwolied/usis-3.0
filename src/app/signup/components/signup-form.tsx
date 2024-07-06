@@ -43,7 +43,7 @@ export default function SignupForm() {
         <div className="h-screen flex flex-col justify-between">
             <div className="w-full max-w-md mx-auto">
                 <h1 className="text-center text-2xl font-bold my-10">USIS 3.0 Signup</h1>
-                <nav className="border-sky-400 p-4 shadow rounded"> {/* Updated border color */}
+                <nav className="border-sky-400 p-4 shadow rounded"> {}
                     <form className="flex flex-col gap-3 items-center">
                         <label htmlFor="username">Username:</label>
                         <input type="text" id="username" name="username" className="border p-2 rounded" onChange={handleChange} />

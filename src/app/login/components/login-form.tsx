@@ -11,39 +11,42 @@ export default function LoginForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-            <label htmlFor="email">Email:</label>
-            <input
-                type="email"
-                id="email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="border p-2 rounded"
-            />
-
-            <label htmlFor="password">Password:</label>
-            <div className="flex items-center border p-2 rounded">
+        <>
+            <h2 className="text-center font-bold text-2xl mb-4">Usis 3.0 Login</h2>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                <label htmlFor="email">Email:</label>
                 <input
-                    type={showPassword ? "text" : "password"} // Toggle between text and password
-                    id="password"
-                    name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="flex-1"
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="border p-2 rounded"
                 />
-                 
 
-                <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="ml-2"
-                >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-            </div>
+                <label htmlFor="password">Password:</label>
+                <div className="flex items-center border p-2 rounded">
+                    <input
+                        type={showPassword ? "text" : "password"} // Toggle between text and password
+                        id="password"
+                        name="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="flex-1"
+                    />
+                     
 
-            <button type="submit" className="mt-4">Log In</button>
-        </form>
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="ml-2"
+                    >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                </div>
+
+                <button type="submit" className="mt-4">Log In</button>
+            </form>
+        </>
     );
 }
