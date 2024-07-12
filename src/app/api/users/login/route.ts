@@ -5,7 +5,6 @@ import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 connect();
-
 export async function POST(request: NextRequest) {
 	try {
 		const reqBody = await request.json();
@@ -30,10 +29,15 @@ export async function POST(request: NextRequest) {
 			username: user.username,
 			email: user.email,
 		};
+		let token;
+		try {
+			token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: '1d' });
+		} catch (error) {
+			console.log('token error');
+			token = '';
+		}
 
-		const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: '1d' });
-
-		const response = NextResponse.json({ message: 'Login successful', success: true });
+		const response = NextResponse.json({ message: 'Login successful', success: true, user: user });
 
 		response.cookies.set('token', token, {
 			httpOnly: true,
