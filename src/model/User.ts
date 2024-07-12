@@ -5,14 +5,14 @@ export interface User extends Document {
 	email: string;
 	image: string;
 	password: string;
-	isFaculty: boolean;
 	name: string;
-	isAdmin: boolean;
-	isVerified: boolean;
+	isFaculty?: boolean;
+	isAdmin?: boolean;
+	isVerified?: boolean;
 	verifyCode: string | null;
 	verifyCodeExpiration: Date | null;
-	resetPasswordCode: string | null;
-	resetPasswordCodeExpiration: Date | null;
+	resetPasswordCode?: string | null;
+	resetPasswordCodeExpiration?: Date | null;
 }
 
 const UserSchema: Schema<User> = new Schema({
