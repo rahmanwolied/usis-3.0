@@ -7,7 +7,7 @@ const connectionState: ConnectionObject = {
 	isConnected: 0,
 };
 
-export async function connect(): Promise<void> {
+export async function dbConnect(): Promise<void> {
 	if (connectionState.isConnected) {
 		return;
 	}
