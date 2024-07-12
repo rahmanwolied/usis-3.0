@@ -16,13 +16,12 @@ export const VerifyIdentityEmail = ({ validationCode }: VerifyIdentityEmailProps
 				<Section style={codeContainer}>
 					<Text style={code}>{validationCode}</Text>
 				</Section>
-				<Text style={paragraph}>Not expecting this email?</Text>
+				<Text style={paragraph}>or</Text>
 				<Text style={paragraph}>
-					Contact{' '}
+					Click
 					<Link href="mailto:login@plaid.com" style={link}>
-						login@plaid.com
+						here
 					</Link>{' '}
-					if you did not request this code.
 				</Text>
 			</Container>
 			<Text style={footer}>Securely powered by USIS 3.0</Text>
@@ -92,7 +91,7 @@ const codeContainer = {
 const code = {
 	color: '#000',
 	display: 'inline-block',
-	fontFamily: 'HelveticaNeue-Bold',
+	fontFamily: 'HelveticaNeue-Bold, Helvetica, Arial, sans-serif',
 	fontSize: '32px',
 	fontWeight: 700,
 	letterSpacing: '6px',

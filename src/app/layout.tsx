@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { AuthProvider } from '@/context/AuthProvider';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,7 +24,7 @@ export default function RootLayout({
 					<main className="relative flex min-h-screen flex-col">
 						<div className="mx-auto max-w-3xl h-full px-4 sm:px-6 lg:max-w-7xl lg:px-8">{children}</div>
 					</main>
-					<div className="fixed top-4 flex justify-between w-full items-center px-8"></div>
+					<Toaster />
 				</body>
 			</AuthProvider>
 		</html>

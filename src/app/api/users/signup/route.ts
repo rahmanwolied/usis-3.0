@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
 			data: savedUser,
 		});
 	} catch (error: any) {
+		console.log(error);
 		return NextResponse.json<ApiResponse<null>>({ message: error.message, status: 'error' }, { status: 500 });
 	}
 }

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@react-email/components": "^0.0.21",
     "axios": "^1.7.2",
@@ -16,17 +17,20 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
+    "input-otp": "^1.2.4",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.400.0",
     "mongoose": "^8.4.4",
     "next": "14.2.4",
     "next-auth": "^4.24.7",
+    "next-themes": "^0.3.0",
     "nodemailer": "^6.9.14",
     "react": "^18",
     "react-dom": "^18",
     "react-email": "^2.1.5",
     "react-google-button": "^0.8.0",
     "react-icons": "^5.2.1",
+    "sonner": "^1.5.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"
