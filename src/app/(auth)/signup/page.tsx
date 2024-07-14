@@ -13,6 +13,9 @@ import axios, { AxiosError } from 'axios';
 import { ApiResponse } from '@/types/ApiResponse.type';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 function Page() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,16 +28,18 @@ function Page() {
 	});
 
 	const onSubmit = async (data: z.infer<typeof signupSchema>) => {
+		console.log('data:', data);
 		setIsSubmitting(true);
 		try {
-			const response = await axios.post('/api/sign-up', data);
+			// const response = await axios.post('/api/sign-up', data);
 
 			toast({
 				title: 'Success',
-				description: response.data.message,
+				description: 'response.data.message',
+				variant: 'success',
 			});
 
-			router.replace(`/verify/${username}`);
+			// router.replace(`/verify/${usernameRef.current?.value}`);
 
 			setIsSubmitting(false);
 		} catch (error) {
@@ -58,7 +63,26 @@ function Page() {
 	return (
 		<div className="h-screen flex items-center justify-center">
 			<div className="flex flex-col items-center justify-center space-y-4">
-				<SignupForm onSubmit={onSubmit} form={form} usernameRef={usernameRef} />
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+						<FormField
+							control={form.control}
+							name="username"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Username</FormLabel>
+									<FormControl>
+										<Input placeholder="shadcn" {...field} />
+									</FormControl>
+									<FormDescription>This is your public display name.</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit">Submit</Button>
+					</form>
+				</Form>
+				{/* <SignupForm onSubmit={onSubmit} form={form} usernameRef={usernameRef} /> */}
 				<GoogleButton onClick={() => signIn('google')} />
 				<Footer />
 			</div>

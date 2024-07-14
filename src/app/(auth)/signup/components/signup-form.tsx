@@ -28,32 +28,14 @@ export default function SignupForm({ onSubmit, form, usernameRef }: { onSubmit: 
 				<h1 className="text-center text-2xl font-bold my-10">USIS 3.0 Signup</h1>
 				<nav className="border-sky-400 p-4 shadow rounded">
 					<div className="flex flex-col gap-3 items-center">
-						<Form {...form}>
-							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-								<FormField
-									control={form.control}
-									name="username"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Username</FormLabel>
-											<FormControl>
-												<Input placeholder="shadcn" {...field} ref={usernameRef} />
-											</FormControl>
-											<FormDescription>This is your public display name.</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<Button type="submit">Submit</Button>
-							</form>
-						</Form>
-						<Dialog>
+						{/* <Dialog>
 							<DialogTrigger>
-								{/* <Button onClick={handleSubmit}>Sign Up</Button> */}
+								<Button onClick={handleSubmit}>Sign Up</Button>
 								<Button variant="default">Sign Up</Button>
 							</DialogTrigger>
 							<OTPDialog username={formData.username} />
 						</Dialog>
+						 */}
 					</div>
 				</nav>
 			</div>
