@@ -4,6 +4,7 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import { AuthProvider } from '@/context/AuthProvider';
 import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from '@/components/shared/theme-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,14 +19,16 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<AuthProvider>
-				<body className={cn('min-h-screen scroll-smooth bg-background font-sans antialiased', inter.className)}>
-					<main className="relative flex min-h-screen flex-col">
-						<div className="mx-auto max-w-3xl h-full px-4 sm:px-6 lg:max-w-7xl lg:px-8">{children}</div>
-					</main>
-					<Toaster />
-				</body>
+				<ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+					<body className={cn('min-h-screen scroll-smooth bg-background font-sans antialiased', inter.className)}>
+						<main className="relative flex min-h-screen flex-col">
+							<div className="h-full px-4 sm:px-6 lg:px-8">{children}</div>
+						</main>
+						<Toaster />
+					</body>
+				</ThemeProvider>
 			</AuthProvider>
 		</html>
 	);

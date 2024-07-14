@@ -1,8 +1,8 @@
-import { dbConnect } from '@/lib/dbConfig';
+import { dbConnect } from '@/lib/dbConnect';
 import UserModel, { User } from '@/model/User';
 import { NextRequest, NextResponse } from 'next/server';
-import { sendEmail } from '@/utilities/mailer';
-import { ApiResponse } from '@/../types/ApiResponse.type';
+import { sendVerificationEmail } from '@/utilities/mailer';
+import { ApiResponse } from '@/types/ApiResponse.type';
 import { hashPassword } from '@/lib/hashPassword';
 import { Document } from 'mongoose';
 
@@ -35,12 +35,15 @@ export async function POST(request: NextRequest) {
 		console.log(savedUser);
 
 		//send verify email
-		const emailResponse = await sendEmail(email, savedUser._id, parseInt(verifyCode));
-		return NextResponse.json<ApiResponse<Document>>({
-			message: 'User Registered Successfully',
-			status: 'success',
-			data: savedUser,
-		});
+		const emailResponse = await sendVerificationEmail(email, username, parseInt(verifyCode));
+		return NextResponse.json<ApiResponse<Document>>(
+			{
+				message: 'User Registered Successfully',
+				status: 'success',
+				data: savedUser,
+			},
+			{ status: 201 }
+		);
 	} catch (error: any) {
 		console.log(error);
 		return NextResponse.json<ApiResponse<null>>({ message: error.message, status: 'error' }, { status: 500 });

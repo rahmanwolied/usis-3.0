@@ -1,4 +1,4 @@
-import { connect } from '@/lib/dbConfig';
+import { connect } from '@/lib/dbConnect';
 import { NextRequest, NextResponse } from 'next/server';
 
 connect();

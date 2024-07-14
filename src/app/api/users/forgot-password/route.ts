@@ -1,7 +1,7 @@
-import { connect } from '@/lib/dbConfig';
+import { connect } from '@/lib/dbConnect';
 import User from '@/model/User';
 import { NextRequest, NextResponse } from 'next/server';
-import { sendEmail } from '@/utilities/mailer';
+import { sendVerificationEmail } from '@/utilities/mailer';
 
 export async function POST(request: NextRequest) {
 	connect();
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 		}
 
 		//send verify email
-		await sendEmail({ email, mailtype: 'reset', userID: user._id });
+		await sendVerificationEmail({ email, mailtype: 'reset', userID: user._id });
 		return NextResponse.json({
 			message: 'Reset link is sent',
 			success: true,

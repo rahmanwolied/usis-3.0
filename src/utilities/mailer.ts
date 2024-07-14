@@ -1,11 +1,11 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import { render } from '@react-email/components';
-import { VerifyIdentityEmail } from '@/emails/verificationEmail';
+import { VerifyIdentityEmail } from '../../emails/verificationEmail';
 
 dotenv.config();
 
-export const sendEmail = async (email: string, userID: unknown, verificationCode: number) => {
+export const sendVerificationEmail = async (email: string, username: string, verificationCode: number) => {
 	try {
 		const transport = nodemailer.createTransport({
 			host: 'sandbox.smtp.mailtrap.io',
@@ -15,7 +15,7 @@ export const sendEmail = async (email: string, userID: unknown, verificationCode
 				pass: process.env.MAILTRAP_PASSWORD,
 			},
 		});
-		const verifyHtml = render(VerifyIdentityEmail({ validationCode: verificationCode.toString() }));
+		const verifyHtml = render(VerifyIdentityEmail({ validationCode: verificationCode.toString(), username }));
 		const mailOptions = {
 			from: 'usis3.0',
 			to: email,

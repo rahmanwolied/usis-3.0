@@ -3,9 +3,10 @@ import * as React from 'react';
 
 interface VerifyIdentityEmailProps {
 	validationCode?: string;
+	username?: string;
 }
 
-export const VerifyIdentityEmail = ({ validationCode }: VerifyIdentityEmailProps) => (
+export const VerifyIdentityEmail = ({ validationCode, username }: VerifyIdentityEmailProps) => (
 	<Html>
 		<Head />
 		<Body style={main}>
@@ -19,7 +20,7 @@ export const VerifyIdentityEmail = ({ validationCode }: VerifyIdentityEmailProps
 				<Text style={paragraph}>or</Text>
 				<Text style={paragraph}>
 					Click
-					<Link href="mailto:login@plaid.com" style={link}>
+					<Link href={`http://localhost:3000/api/users/verify-email?username=${username}&token=${validationCode}`} style={link}>
 						here
 					</Link>{' '}
 				</Text>

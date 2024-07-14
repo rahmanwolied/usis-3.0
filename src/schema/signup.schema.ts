@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const usernameSchema = z
+export const usernameSchema = z
 	.string()
 	.min(2, { message: 'Username must be atleast 2 characters' })
 	.max(20, { message: 'Username must be within 20 characters' });

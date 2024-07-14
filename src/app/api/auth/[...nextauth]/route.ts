@@ -3,7 +3,7 @@ import { randomBytes } from 'crypto';
 import nextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import User from '@/model/User';
-import { dbConnect } from '@/lib/dbConfig';
+import { dbConnect } from '@/lib/dbConnect';
 
 export const authOptions = {
 	providers: [
