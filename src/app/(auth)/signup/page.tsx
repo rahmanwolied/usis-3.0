@@ -17,6 +17,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2 } from 'lucide-react';
 
 function Page() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,21 +67,32 @@ function Page() {
 		<div className="w-full h-screen flex items-center justify-center gap-44">
 			<div className="flex items-center justify-center py-12">
 				<div className="mx-auto grid gap-6">
-					<div className="grid gap-2 text-center">
-						<h1 className="text-3xl font-bold">Sign Up</h1>
-						<p className="text-balance text-muted-foreground">Enter the information below to sign up</p>
-					</div>
-					<div className="grid gap-4">
-						<SignupForm onSubmit={onSubmit} form={form} usernameRef={usernameRef}></SignupForm>
-
-						<Button onClick={() => signIn('google')}>Sign in with Google</Button>
-					</div>
-					<div className="mt-4 text-center text-sm">
-						Already have an account?{' '}
-						<Link href="/login" className="underline">
-							Login
-						</Link>
-					</div>
+					<Card>
+						<CardHeader>
+							<CardTitle>Sign Up</CardTitle>
+							<CardDescription>Enter the information below to create a new account</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<div className="grid gap-4">
+								<Form {...form}>
+									<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+										<SignupForm form={form}></SignupForm>
+										<Button type="submit" className=" w-full">
+											{isSubmitting ? <Loader2 className="animate-spin" /> : 'Sign Up'}
+										</Button>
+									</form>
+								</Form>
+								<Button onClick={() => signIn('google')}>Sign in with Google</Button>
+							</div>
+						</CardContent>
+						<CardFooter>
+							Already have an account? {'  '}
+							<Link href="/login" className="underline">
+								{' '}
+								Login
+							</Link>
+						</CardFooter>
+					</Card>
 				</div>
 			</div>
 			<div className="hidden lg:flex items-center">
