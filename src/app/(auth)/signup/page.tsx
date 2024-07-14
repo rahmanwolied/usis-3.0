@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 function Page() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,11 +32,11 @@ function Page() {
 		console.log('data:', data);
 		setIsSubmitting(true);
 		try {
-			// const response = await axios.post('/api/sign-up', data);
+			const response = await axios.post('/api/users/signup', data);
 
 			toast({
 				title: 'Success',
-				description: 'response.data.message',
+				description: response.data.message,
 				variant: 'success',
 			});
 
@@ -61,33 +62,27 @@ function Page() {
 	};
 
 	return (
-		<div className="h-screen flex items-center justify-center">
-			<div className="flex flex-col items-center justify-center space-y-4">
-				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-						<FormField
-							control={form.control}
-							name="username"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Username</FormLabel>
-									<FormControl>
-										<Input placeholder="shadcn" {...field} />
-									</FormControl>
-									<FormDescription>This is your public display name.</FormDescription>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<Button type="submit">Submit</Button>
-					</form>
-				</Form>
-				{/* <SignupForm onSubmit={onSubmit} form={form} usernameRef={usernameRef} /> */}
-				<GoogleButton onClick={() => signIn('google')} />
-				<Footer />
-			</div>
+		<div className="w-full h-screen flex items-center justify-center gap-44">
+			<div className="flex items-center justify-center py-12">
+				<div className="mx-auto grid gap-6">
+					<div className="grid gap-2 text-center">
+						<h1 className="text-3xl font-bold">Sign Up</h1>
+						<p className="text-balance text-muted-foreground">Enter the information below to sign up</p>
+					</div>
+					<div className="grid gap-4">
+						<SignupForm onSubmit={onSubmit} form={form} usernameRef={usernameRef}></SignupForm>
 
-			<div className="h-screen flex items-center">
+						<Button onClick={() => signIn('google')}>Sign in with Google</Button>
+					</div>
+					<div className="mt-4 text-center text-sm">
+						Already have an account?{' '}
+						<Link href="/login" className="underline">
+							Login
+						</Link>
+					</div>
+				</div>
+			</div>
+			<div className="hidden lg:flex items-center">
 				<USI3S variant="large" />
 			</div>
 		</div>
