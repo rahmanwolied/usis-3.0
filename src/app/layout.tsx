@@ -21,7 +21,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<AuthProvider>
-				<ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+				<ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
 					<body className={cn('min-h-screen scroll-smooth bg-background font-sans antialiased', inter.className)}>
 						<main className="relative flex min-h-screen flex-col">
 							<div className="h-full px-4 sm:px-6 lg:px-8">{children}</div>
