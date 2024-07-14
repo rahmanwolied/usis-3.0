@@ -11,34 +11,58 @@ export default function SignupForm({ onSubmit, form, usernameRef }: { onSubmit: 
 	const [showPassword, setShowPassword] = useState(false);
 
 	const togglePasswordVisibility = () => setShowPassword(!showPassword);
-	const [formData, setFormData] = useState({ username: '', email: '', password: '' });
-
-	const handleSubmit = async (event: any) => {};
-
-	const handleChange = (event: any) => {
-		const { name, value } = event.target;
-		setFormData((prevState) => ({
-			...prevState,
-			[name]: value,
-		}));
-	};
 	return (
-		<div className="h-screen flex flex-col justify-between">
-			<div className="w-full max-w-md mx-auto">
-				<h1 className="text-center text-2xl font-bold my-10">USIS 3.0 Signup</h1>
-				<nav className="border-sky-400 p-4 shadow rounded">
-					<div className="flex flex-col gap-3 items-center">
-						{/* <Dialog>
-							<DialogTrigger>
-								<Button onClick={handleSubmit}>Sign Up</Button>
-								<Button variant="default">Sign Up</Button>
-							</DialogTrigger>
-							<OTPDialog username={formData.username} />
-						</Dialog>
-						 */}
-					</div>
-				</nav>
-			</div>
-		</div>
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+				<FormField
+					control={form.control}
+					name="email"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Email</FormLabel>
+							<FormControl>
+								<Input {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="password"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Password</FormLabel>
+							<FormControl>
+								<div className="flex">
+									<Input {...field} type={showPassword ? 'text' : 'password'} />
+									<Button variant="ghost" type="button" onClick={togglePasswordVisibility}>
+										{showPassword ? <FaEyeSlash /> : <FaEye />}
+									</Button>
+								</div>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="username"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Username</FormLabel>
+							<FormControl>
+								<Input {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<Button type="submit" className="bg-blue-500 w-full">
+					Sign Up
+				</Button>
+			</form>
+		</Form>
 	);
 }
