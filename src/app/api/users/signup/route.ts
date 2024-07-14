@@ -1,4 +1,4 @@
-import { dbConnect } from '@/lib/dbConnect';
+import dbConnect from '@/lib/dbConnect';
 import UserModel, { User } from '@/model/User';
 import { NextRequest, NextResponse } from 'next/server';
 import { sendVerificationEmail } from '@/utilities/mailer';

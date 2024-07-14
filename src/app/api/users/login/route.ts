@@ -1,12 +1,12 @@
-import { connect } from '@/lib/dbConnect';
+import dbConnect from '@/lib/dbConnect';
 import User from '@/model/User';
 import { NextRequest, NextResponse } from 'next/server';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-connect();
 export async function POST(request: NextRequest) {
 	try {
+		await dbConnect();
 		const reqBody = await request.json();
 		const { email, password } = reqBody;
 		//Validation

@@ -1,10 +1,10 @@
-import { connect } from '@/lib/dbConnect';
+import dbConnect from '@/lib/dbConnect';
 import User from '@/model/User';
 import { NextRequest, NextResponse } from 'next/server';
 import { sendVerificationEmail } from '@/utilities/mailer';
 
 export async function POST(request: NextRequest) {
-	connect();
+	await dbConnect();
 	try {
 		const reqBody = await request.json();
 		const { email } = reqBody;
