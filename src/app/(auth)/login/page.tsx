@@ -1,19 +1,61 @@
+'use client';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { USI3S } from '@/components/shared/usi3s';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { signinSchema } from '@/schema/signin.schema';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
+import LoginForm from './components/login-form';
+import { Form } from '@/components/ui/form';
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { getSession } from 'next-auth/react';
 
 export default function Login() {
+	const { toast } = useToast();
+	const router = useRouter();
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const form = useForm<z.infer<typeof signinSchema>>({
 		resolver: zodResolver(signinSchema),
 	});
+
+	const onSubmit = async (data: z.infer<typeof signinSchema>) => {
+		setIsSubmitting(true);
+
+		try {
+			const response = await signIn('credentials', {
+				identifier: data.identifier,
+				password: data.password,
+				redirect: false,
+			});
+			if (response?.error) {
+				toast({
+					title: 'Sign In Failed',
+					description: response.error,
+					variant: 'destructive',
+				});
+				setIsSubmitting(false);
+			} else {
+				const session = await getSession();
+				toast({
+					title: 'Success',
+					description: "Login successful. You're being redirected to your profile",
+				});
+				if (session?.user) {
+					router.push(`/user/${session.user.username}/profile`);
+				}
+			}
+		} catch (error: any) {
+			console.error('Error during sign-in:', error);
+		}
+		setIsSubmitting(false);
+	};
 
 	return (
 		<div className="w-full h-screen flex items-center justify-center gap-44">
@@ -26,30 +68,22 @@ export default function Login() {
 						</CardHeader>
 						<CardContent>
 							<div className="grid gap-4">
-								<div className="grid gap-2">
-									<Label htmlFor="email">Email</Label>
-									<Input id="email" type="email" placeholder="m@example.com" required />
-								</div>
-								<div className="grid gap-2">
-									<div className="flex items-center">
-										<Label htmlFor="password">Password</Label>
-										<Link href="/forgot-password" className="ml-auto inline-block text-sm underline">
-											Forgot your password?
-										</Link>
-									</div>
-									<Input id="password" type="password" required />
-								</div>
-								<Button type="submit" className="w-full">
-									Login
-								</Button>
-								<Button variant="outline" className="w-full">
-									Login with Google
+								<Form {...form}>
+									<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+										<LoginForm form={form}></LoginForm>
+										<Button type="submit" className=" w-full">
+											{isSubmitting ? <Loader2 className="animate-spin" /> : 'Sign Up'}
+										</Button>
+									</form>
+								</Form>
+								<Button variant="outline" onClick={() => signIn('google')}>
+									Sign in with Google
 								</Button>
 							</div>
 						</CardContent>
 						<CardFooter className="flex gap-2">
 							Don&apos;t have an account?{' '}
-							<Link href="#" className="underline">
+							<Link href="/signup" className="underline">
 								Sign up
 							</Link>
 						</CardFooter>
