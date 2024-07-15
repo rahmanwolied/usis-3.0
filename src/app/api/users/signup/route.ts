@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 		//Validation
 		console.log(reqBody);
 
-		const user = await UserModel.findOne({ email, username });
+		const user = await UserModel.findOne({ $or: [{ email }, { username }] });
 		if (user) {
 			return NextResponse.json<ApiResponse<null>>({ status: 'error', message: 'User already exists' }, { status: 400 });
 		}

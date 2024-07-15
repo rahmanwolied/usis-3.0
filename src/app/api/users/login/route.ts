@@ -3,25 +3,26 @@ import User from '@/model/User';
 import { NextRequest, NextResponse } from 'next/server';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { ApiResponse } from '@/types/ApiResponse.type';
 
 export async function POST(request: NextRequest) {
 	try {
 		await dbConnect();
 		const reqBody = await request.json();
-		const { email, password } = reqBody;
-		//Validation
-		console.log(reqBody);
+		const { identifier, password } = reqBody;
+		console.log('reqBody', reqBody);
 
-		const user = await User.findOne({ email });
+		const user = await User.findOne({ $or: [{ email: identifier }, { username: identifier }] });
 		if (!user) {
-			return NextResponse.json({ error: 'User does not exist' }, { status: 400 });
+			return NextResponse.json<ApiResponse<null>>({ message: 'Invalid username or email', status: 'error' });
 		}
 		console.log('user exist');
 
-		const validPassword = bcryptjs.compare(password, user.password);
+		const validPassword = await bcryptjs.compare(password, user.password);
+		console.log('validPassword', validPassword);
 
 		if (!validPassword) {
-			return NextResponse.json({ error: 'Please enter correct password' }, { status: 400 });
+			return NextResponse.json<ApiResponse<null>>({ message: 'Incorrect password', status: 'error' });
 		}
 
 		const tokenData = {
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
 			token = '';
 		}
 
-		const response = NextResponse.json({ message: 'Login successful', success: true, user: user });
+		const response = NextResponse.json<ApiResponse<typeof user>>({ message: 'Login successful', status: 'success', data: user }, { status: 200 });
 
 		response.cookies.set('token', token, {
 			httpOnly: true,
