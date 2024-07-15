@@ -1,19 +1,11 @@
 'use client';
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { Dialog, DialogTrigger } from '@radix-ui/react-dialog';
-import { OTPDialog } from './otp-dialog';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input, PasswordInput } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import Link from 'next/link';
 import { Checkbox } from '@/components/ui/checkbox';
 
 export default function SignupForm({ form }: { form: any }) {
-	const [showPassword, setShowPassword] = useState(false);
-
-	const togglePasswordVisibility = () => setShowPassword(!showPassword);
 	return (
 		<>
 			<FormField
@@ -83,7 +75,6 @@ export default function SignupForm({ form }: { form: any }) {
 								<SelectItem value="PHY">Physics</SelectItem>
 							</SelectContent>
 						</Select>
-
 						<FormMessage />
 					</FormItem>
 				)}
@@ -102,6 +93,7 @@ export default function SignupForm({ form }: { form: any }) {
 								<h1 className="mb-1">Select this if you are a faculty member of the university.</h1>
 								This will limit the features you can use.
 							</FormDescription>
+							<FormMessage />
 						</div>
 					</FormItem>
 				)}
