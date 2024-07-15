@@ -19,15 +19,21 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { OTPDialog } from './components/otp-dialog';
 
 function Page() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const { toast } = useToast();
 	const router = useRouter();
 	const usernameRef = useRef<HTMLInputElement>(null);
+	const dialogButton = useRef<HTMLButtonElement>(null);
 
 	const form = useForm<z.infer<typeof signupSchema>>({
 		resolver: zodResolver(signupSchema),
+		defaultValues: {
+			isFaculty: false,
+		},
 	});
 
 	const onSubmit = async (data: z.infer<typeof signupSchema>) => {
@@ -42,7 +48,8 @@ function Page() {
 				variant: 'success',
 			});
 
-			// router.replace(`/verify/${usernameRef.current?.value}`);
+			// Open the OTP dialog
+			dialogButton.current?.click();
 
 			setIsSubmitting(false);
 		} catch (error) {
@@ -82,7 +89,9 @@ function Page() {
 										</Button>
 									</form>
 								</Form>
-								<Button onClick={() => signIn('google')}>Sign in with Google</Button>
+								<Button variant="outline" onClick={() => signIn('google')}>
+									Sign in with Google
+								</Button>
 							</div>
 						</CardContent>
 						<CardFooter>
@@ -98,6 +107,14 @@ function Page() {
 			<div className="hidden lg:flex items-center">
 				<USI3S variant="large" />
 			</div>
+			<Dialog>
+				<DialogTrigger>
+					<Button className="hidden" ref={dialogButton}>
+						Open Dialog
+					</Button>
+				</DialogTrigger>
+				<OTPDialog username={form.getValues().username} password={form.getValues().password}></OTPDialog>
+			</Dialog>
 		</div>
 	);
 }
