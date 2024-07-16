@@ -3,29 +3,35 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface User extends Document {
 	username: string;
 	email: string;
+	image: string;
 	password: string;
-	isFaculty: boolean;
-	isAdmin: boolean;
-	isVerified: boolean;
-	verifyCode: string;
-	verifyCodeExpiration: Date;
-	resetPasswordCode: string;
-	resetPasswordCodeExpiration: Date;
+	name: string;
+	isFaculty?: boolean;
+	isAdmin?: boolean;
+	isVerified?: boolean;
+	verifyCode: string | null;
+	verifyCodeExpiration: Date | null;
+	resetPasswordCode?: string | null;
+	resetPasswordCodeExpiration?: Date | null;
 }
 
 const UserSchema: Schema<User> = new Schema({
 	username: {
 		type: String,
-		required: [true, 'Please provide a username'],
+		required: [false, 'Please provide a username'],
 	},
+	name: String,
 	email: {
 		type: String,
 		required: [true, 'Please provide an email'],
 		unique: true,
 	},
+	image: {
+		type: String,
+	},
 	password: {
 		type: String,
-		required: [true, 'Please provide a password'],
+		required: [false, 'Please provide a password'],
 	},
 	isFaculty: {
 		type: Boolean,
@@ -40,16 +46,16 @@ const UserSchema: Schema<User> = new Schema({
 		default: false,
 	},
 	verifyCode: {
-		type: String,
+		type: String || null,
 	},
 	verifyCodeExpiration: {
-		type: Date,
+		type: Date || null,
 	},
 	resetPasswordCode: {
-		type: String,
+		type: String || null,
 	},
 	resetPasswordCodeExpiration: {
-		type: Date,
+		type: Date || null,
 	},
 });
 
