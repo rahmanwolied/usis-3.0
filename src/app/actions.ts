@@ -1,18 +1,22 @@
+'use server';
 import dbConnect from '@/lib/dbConnect';
 import User from '@/model/User';
-import { NextRequest, NextResponse } from 'next/server';
 import { sendPasswordResetEmail } from '@/utilities/mailer';
 import { ApiResponse } from '@/types/ApiResponse.type';
 
-export async function POST(request: NextRequest) {
+export async function forgotPassword(prevSate: any, formData: FormData): Promise<ApiResponse<null>> {
+	console.log('forgotPassword-prevSate', prevSate);
 	await dbConnect();
 	try {
-		const reqBody = await request.json();
-		const { email } = reqBody;
+		const email = formData.get('email') as string;
 
 		const user = await User.findOne({ email });
 		if (!user) {
-			return NextResponse.json<ApiResponse<null>>({ message: 'User with this email does not exist', status: 'error' }, { status: 400 });
+			return {
+				message: 'User with this email does not exist',
+				status: 'error',
+				code: 404,
+			};
 		}
 
 		user.resetPasswordCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -20,11 +24,11 @@ export async function POST(request: NextRequest) {
 		await user.save();
 
 		await sendPasswordResetEmail(user.email, user.username, parseInt(user.resetPasswordCode));
-		return NextResponse.json<ApiResponse<null>>({
-			message: 'Reset link is sent',
+		return {
+			message: 'Reset link has been sent. Please check your email.',
 			status: 'success',
-		});
+		};
 	} catch (error: any) {
-		return NextResponse.json({ error: error.message }, { status: 500 });
+		return { message: error.message, status: 'error', code: 500 };
 	}
 }

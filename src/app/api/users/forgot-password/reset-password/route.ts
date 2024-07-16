@@ -1,20 +1,19 @@
-import { connect } from '@/lib/dbConnect';
+import dbConnect from '@/lib/dbConnect';
 import User from '@/model/User';
 import { NextRequest, NextResponse } from 'next/server';
 import bcryptjs from 'bcryptjs';
-
-connect();
+import { ApiResponse } from '@/types/ApiResponse.type';
 
 export async function POST(request: NextRequest) {
 	try {
+		await dbConnect();
 		const reqBody = await request.json();
 		const { token, newPassword } = reqBody;
-		console.log(token);
 
 		const user = await User.findOne({ resetPasswordCode: token, resetPasswordCodeExpiration: { $gt: Date.now() } });
 
 		if (!user) {
-			return NextResponse.json({ error: 'Invalid code or code expired' }, { status: 500 });
+			return NextResponse.json<ApiResponse<null>>({ message: 'Invalid code or code expired', status: 'error' }, { status: 500 });
 		}
 		console.log(user);
 
@@ -25,8 +24,8 @@ export async function POST(request: NextRequest) {
 
 		await user.save();
 
-		return NextResponse.json({ message: 'Password reset successfully', success: true }, { status: 500 });
+		return NextResponse.json<ApiResponse<null>>({ message: 'Password reset successfully', status: 'success' }, { status: 200 });
 	} catch (error: any) {
-		return NextResponse.json({ error: error.message }, { status: 500 });
+		return NextResponse.json<ApiResponse<null>>({ message: error.message, status: 'error' }, { status: 500 });
 	}
 }

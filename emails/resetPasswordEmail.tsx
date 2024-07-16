@@ -1,40 +1,54 @@
-import { Body, Container, Head, Heading, Html, Img, Link, Section, Text } from '@react-email/components';
+import { Body, Container, Head, Heading, Html, Img, Link, Section, Text, Button } from '@react-email/components';
 import * as React from 'react';
 
-interface VerifyIdentityEmailProps {
-	validationCode?: string;
+interface ResetPasswordEmailProps {
+	resetCode?: string;
 	username?: string;
 }
 
-export const VerifyIdentityEmail = ({ validationCode, username }: VerifyIdentityEmailProps) => (
+export const ResetPasswordEmail = ({ resetCode, username }: ResetPasswordEmailProps) => (
 	<Html>
 		<Head />
 		<Body style={main}>
 			<Container style={container}>
 				<Img src={`http://localhost:3000/static/usis-logo.png`} width="150" height="150" alt="usis3.0" style={logo} />
-				<Text style={tertiary}>Verify Your Identity</Text>
-				<Heading style={secondary}>Enter the following code to finish verifying your account.</Heading>
+				<Text style={tertiary}>Reset your password</Text>
+				<Heading style={secondary}>Click the button below to reset your password</Heading>
 				<Section style={codeContainer}>
-					<Text style={code}>{validationCode}</Text>
+					<Button style={button}>
+						<Link
+							href={`http://localhost:3000/api/users/forgot-password/reset-password?username=${username}&token=${resetCode}`}
+							style={link}>
+							Reset Password
+						</Link>
+					</Button>
 				</Section>
-				<Text style={paragraph}>or</Text>
-				<Text style={paragraph}>
-					Click{' '}
-					<Link href={`http://localhost:3000/api/users/verify-email?username=${username}&token=${validationCode}`} style={link}>
-						here
-					</Link>{' '}
-				</Text>
 			</Container>
 			<Text style={footer}>Securely powered by USIS 3.0</Text>
 		</Body>
 	</Html>
 );
 
-VerifyIdentityEmail.PreviewProps = {
-	validationCode: '144833',
-} as VerifyIdentityEmailProps;
+ResetPasswordEmail.PreviewProps = {
+	resetCode: '144833',
+} as ResetPasswordEmailProps;
 
-VerifyIdentityEmail;
+ResetPasswordEmail;
+
+const button = {
+	backgroundColor: '#121212',
+	border: '1px solid #aaaaaa',
+	borderRadius: '4px',
+	color: '#fff',
+	cursor: 'pointer',
+	display: 'inline-block',
+	fontSize: '16px',
+	fontWeight: 700,
+	lineHeight: '24px',
+	padding: '8px 16px',
+	textAlign: 'center' as const,
+	textDecoration: 'none',
+};
 
 const main = {
 	backgroundColor: '#ffffff',
