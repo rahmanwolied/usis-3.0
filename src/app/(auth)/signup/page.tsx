@@ -1,9 +1,7 @@
 'use client';
 import React, { useRef, useState } from 'react';
 import { signIn } from 'next-auth/react';
-import GoogleButton from 'react-google-button';
 import SignupForm from './components/signup-form'; // Adjust the path as necessary
-import Footer from './components/footer'; // Adjust the path as necessary
 import { USI3S } from '@/components/shared/usi3s';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -13,8 +11,7 @@ import axios, { AxiosError } from 'axios';
 import { ApiResponse } from '@/types/ApiResponse.type';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
