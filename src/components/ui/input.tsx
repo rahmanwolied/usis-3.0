@@ -24,9 +24,12 @@ Input.displayName = 'Input';
 const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(({ className, ...props }, ref) => {
 	const [showPassword, setShowPassword] = React.useState(false);
 
-	const togglePasswordVisibility = () => setShowPassword(!showPassword);
+	const togglePasswordVisibility = () => {
+		setShowPassword(!showPassword) 
+		console.log(showPassword)
+	};
 	return (
-		<div className="flex w-full rounded-md border border-input ring-offset-background">
+		<div className={`relative w-full rounded-md border border-input ring-offset-background`}>
 			<input
 				type={showPassword ? 'text' : 'password'}
 				className={cn(
@@ -36,7 +39,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(({ classNam
 				ref={ref}
 				{...props}
 			/>
-			<Button variant="ghost" type="button" onClick={togglePasswordVisibility}>
+			<Button className='absolute right-0 top-0' variant="ghost" type="button" onClick={togglePasswordVisibility}>
 				{showPassword ? <FaEyeSlash /> : <FaEye />}
 			</Button>
 		</div>

@@ -10,7 +10,6 @@ export async function forgotPassword(
     prevSate: any,
     formData: FormData
 ): Promise<ApiResponse<null>> {
-    console.log('forgotPassword-prevSate', prevSate);
     await dbConnect();
     try {
         const email = formData.get('email') as string;

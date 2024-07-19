@@ -69,7 +69,7 @@ export default function Login() {
 					) : (
 						<Card>
 							<CardHeader>
-								<CardTitle className="text-3xl font-bold">Reset Password</CardTitle>
+								<CardTitle className="text-3xl font-bold">Forgot Password</CardTitle>
 								<CardDescription className="text-balance">
 									Enter your email and we will send you a link
 									<br /> to reset your password

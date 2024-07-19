@@ -15,12 +15,10 @@ export const ResetPasswordEmail = ({ resetCode, username }: ResetPasswordEmailPr
 				<Text style={tertiary}>Reset your password</Text>
 				<Heading style={secondary}>Click the button below to reset your password</Heading>
 				<Section style={codeContainer}>
-					<Button style={button}>
-						<Link
-							href={`http://localhost:3000/api/users/forgot-password/reset-password?username=${username}&token=${resetCode}`}
-							style={link}>
-							Reset Password
-						</Link>
+					<Button
+						style={button}
+						href={`http://localhost:3000/api/users/forgot-password/reset-password?username=${username}&token=${resetCode}`}>
+						Reset Password
 					</Button>
 				</Section>
 			</Container>
