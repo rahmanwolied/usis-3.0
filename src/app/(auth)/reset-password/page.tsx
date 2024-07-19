@@ -1,15 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { getSearchParams } from '@/utilities/get-search-params';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios, { AxiosError } from 'axios';
 import { Loader2 } from 'lucide-react';
-import { getSession } from 'next-auth/react';
-import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { ApiResponse } from '@/types/ApiResponse.type';
 import { ApiResponseInitialState } from '@/lib/initialStates';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,23 +31,28 @@ import {
 } from '@/components/ui/form';
 import { Input, PasswordInput } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { USI3S } from '@/components/shared/usi3s';
+import { Logo } from '@/components/shared/logo';
 import { forgotPassword } from '@/app/actions';
 
 import { SuccessMessage } from './components/successMessage';
 
 const schema = z.object({
-    password: z.string({ required_error: 'Please type a new password' }),
-    confirmPassword: z.string({ required_error: 'Please type a new password' }),
+    newPassword: z.string({ required_error: 'Please type a new password' }),
+    confirmPassword: z.string(),
+    username: z.string(),
+    token: z.string(),
 });
 
+interface ResetPasswordURLParams {
+    username: string;
+    token: string;
+}
+
 export default function Login() {
-    const [state, formAction] = useFormState(forgotPassword, ApiResponseInitialState);
-    const [pass, setPass] = useState('');
-    const [confPass, setConfPass] = useState('');
+    const passRef = useRef<HTMLInputElement>(null);
+    const confPassRef = useRef<HTMLInputElement>(null);
     const [message, setMessage] = useState('');
 
-    const { pending } = useFormStatus();
     const [submitting, setSubmitting] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
     const { toast } = useToast();
@@ -55,30 +61,47 @@ export default function Login() {
         resolver: zodResolver(schema),
     });
 
-    useEffect(() => {
-        if (pass !== confPass) setMessage("Passwords don't match");
-        else setMessage('');
-    }, [pass, confPass]);
+    const { username, token } = getSearchParams<ResetPasswordURLParams>(window.location.search);
 
-    useEffect(() => {
-        if (state?.code === 0) return;
-        setSubmitting(false);
-
-        if (state?.status === 'success') {
-            setEmailSent(true);
+    const onSubmit = async (data: z.infer<typeof schema>) => {
+        setSubmitting(true);
+        console.log('data', data);
+        if (passRef.current?.value !== confPassRef.current?.value) {
             toast({
-                title: 'Success',
-                description: state?.message,
-            });
-        } else if (state?.status === 'error') {
-            toast({
-                title: 'Error',
-                description: state?.message,
+                title: 'Passwords dont match',
                 variant: 'destructive',
             });
+            setSubmitting(false);
+            return;
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state]);
+        try {
+            const response = await axios.post('/api/users/reset-password', data);
+
+            toast({
+                title: 'Success',
+                description: response.data.message,
+                variant: 'success',
+            });
+
+            setSubmitting(false);
+            router.replace('/login', { scroll: true });
+        } catch (error) {
+            console.error('Error during reset password', error);
+
+            const axiosError = error as AxiosError<ApiResponse<any>>;
+
+            let errorMessage = axiosError.response?.data.message;
+            ('There was a problem with resetting your password. Please try again.');
+
+            toast({
+                title: 'Reset password failed',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+
+            setSubmitting(false);
+        }
+    };
 
     return (
         <div className={'flex h-screen w-full items-center justify-center gap-44'}>
@@ -96,16 +119,21 @@ export default function Login() {
                             </CardHeader>
                             <CardContent>
                                 <div className="grid gap-4">
-                                    <form action={formAction} className="space-y-4">
+                                    <form
+                                        onSubmit={form.handleSubmit(onSubmit)}
+                                        className="space-y-4">
                                         <Form {...form}>
                                             <FormField
                                                 control={form.control}
-                                                name="password"
+                                                name="newPassword"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Password</FormLabel>
+                                                        <FormLabel>New Password</FormLabel>
                                                         <FormControl>
-                                                            <PasswordInput {...field} />
+                                                            <PasswordInput
+                                                                {...field}
+                                                                ref={passRef}
+                                                            />
                                                         </FormControl>
                                                     </FormItem>
                                                 )}
@@ -117,9 +145,42 @@ export default function Login() {
                                                     <FormItem>
                                                         <FormLabel>Confirm Password</FormLabel>
                                                         <FormControl>
-                                                            <PasswordInput {...field} />
+                                                            <PasswordInput
+                                                                {...field}
+                                                                ref={confPassRef}
+                                                            />
                                                         </FormControl>
                                                         <FormMessage>{message}</FormMessage>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="username"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormControl>
+                                                            <Input
+                                                                {...field}
+                                                                type="hidden"
+                                                                value={username}
+                                                            />
+                                                        </FormControl>
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name="token"
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormControl>
+                                                            <Input
+                                                                {...field}
+                                                                type="hidden"
+                                                                value={token}
+                                                            />
+                                                        </FormControl>
                                                     </FormItem>
                                                 )}
                                             />
@@ -127,7 +188,10 @@ export default function Login() {
                                         <Button
                                             type="submit"
                                             className="w-full"
-                                            onClick={(e) => setSubmitting(true)}>
+                                            onClick={(e) => setSubmitting(true)}
+                                            disabled={
+                                                message !== '' || passRef.current?.value === ''
+                                            }>
                                             {submitting ? (
                                                 <Loader2 className="animate-spin" />
                                             ) : (
@@ -135,9 +199,6 @@ export default function Login() {
                                             )}
                                         </Button>
                                     </form>
-                                    <p aria-live="polite" className="sr-only">
-                                        {state?.message}
-                                    </p>
                                 </div>
                             </CardContent>
                             <CardFooter className="flex gap-2">
@@ -151,7 +212,7 @@ export default function Login() {
                 </div>
             </div>
             <div className="hidden items-center lg:flex">
-                <USI3S variant="large" />
+                <Logo variant="large" />
             </div>
         </div>
     );
