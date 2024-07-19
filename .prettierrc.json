@@ -2,8 +2,9 @@
     "endOfLine": "lf",
     "semi": true,
     "singleQuote": true,
+    "printWidth": 100,
+    "bracketSameLine": true,
     "tabWidth": 4,
-    "trailingComma": "es5",
     "importOrder": [
         "^(react/(.*)$)|^(react$)",
         "^(next/(.*)$)|^(next$)",
@@ -25,7 +26,12 @@
     "importOrderSeparation": false,
     "importOrderSortSpecifiers": true,
     "importOrderBuiltinModulesToTop": true,
-    "importOrderParserPlugins": ["typescript", "tsx", "decorators-legacy"],
+    "importOrderParserPlugins": [
+        "typescript",
+        "tsx",
+        "jsx",
+        "decorators-legacy"
+    ],
     "importOrderMergeDuplicateImports": true,
     "importOrderCombineTypeAndValueImports": true,
     "plugins": [
