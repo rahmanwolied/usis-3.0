@@ -2,7 +2,7 @@
     "endOfLine": "lf",
     "semi": true,
     "singleQuote": true,
-    "printWidth": 100,
+    "printWidth": 150,
     "bracketSameLine": true,
     "tabWidth": 4,
     "importOrder": [
@@ -26,16 +26,8 @@
     "importOrderSeparation": false,
     "importOrderSortSpecifiers": true,
     "importOrderBuiltinModulesToTop": true,
-    "importOrderParserPlugins": [
-        "typescript",
-        "tsx",
-        "jsx",
-        "decorators-legacy"
-    ],
+    "importOrderParserPlugins": ["typescript", "tsx", "jsx", "decorators-legacy"],
     "importOrderMergeDuplicateImports": true,
     "importOrderCombineTypeAndValueImports": true,
-    "plugins": [
-        "@ianvs/prettier-plugin-sort-imports",
-        "prettier-plugin-tailwindcss"
-    ]
+    "plugins": ["@ianvs/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"]
 }

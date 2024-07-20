@@ -104,12 +104,15 @@ function Page() {
                                         </Button>
                                     </form>
                                 </Form>
-                                <Button variant="outline" onClick={() => signIn('google')}>
+                                <Button
+                                    variant="outline"
+                                    className="bg-card"
+                                    onClick={() => signIn('google')}>
                                     Sign in with Google
                                 </Button>
                             </div>
                         </CardContent>
-                        <CardFooter>
+                        <CardFooter className="flex gap-1">
                             Already have an account? {'  '}
                             <Link href="/login" className="underline">
                                 {' '}

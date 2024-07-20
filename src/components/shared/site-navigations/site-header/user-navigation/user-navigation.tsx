@@ -12,7 +12,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import DisconnectWallet from './disconnect-wallet';
 import UserNavigations from './user-navigations';
 
 const UserNavigation = () => {
@@ -38,7 +37,6 @@ const UserNavigation = () => {
                 <DropdownMenuSeparator />
                 <UserNavigations />
                 <DropdownMenuSeparator />
-                <DisconnectWallet />
             </DropdownMenuContent>
         </DropdownMenu>
     );

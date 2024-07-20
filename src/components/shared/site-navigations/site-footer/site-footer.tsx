@@ -9,11 +9,11 @@ import Newsletter from './newsletter';
 import Socials from './socials';
 
 const navigation = {
-    marketplace: [
-        { name: 'Explore', href: '#' },
-        { name: 'Tranding', href: '#' },
-        { name: 'Buy NFTS', href: '#' },
-        { name: 'My Profile', href: '#' },
+    features: [
+        { name: 'Class Schedule', href: '#' },
+        { name: 'Seat Status', href: '#' },
+        { name: 'CGPA Calculator', href: '#' },
+        { name: 'Find Empty Classes', href: '#' },
     ],
     support: [
         { name: 'Pricing', href: '#' },
@@ -47,17 +47,33 @@ const SiteFooter = () => {
                     <div className="space-y-8">
                         <Logo variant="small" />
                         <p className="select-none text-sm leading-6 text-gray-300">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore.
+                            All data and features are fetched from the official USIS website. This
+                            is a university project and has no intentions of commercial use. All the
+                            data is owned by BRAC Univerity.
+                            <br />
+                            <h1 className="mt-6 font-bold">Created by:</h1>
+                            <ul>
+                                <li>
+                                    <a href="https://www.github.com/rahmanwolied">
+                                        Mosheur Rahman Wolied
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://www.github.com">Nafis Sadique Niloy</a>
+                                </li>
+                                <li>
+                                    <a href="https://www.github.com">Nabanita Sarker</a>
+                                </li>
+                            </ul>
                         </p>
                         <Socials />
                     </div>
                     <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
                         <FooterSection>
                             <div>
-                                <FooterSection.Title>Market place</FooterSection.Title>
+                                <FooterSection.Title>Features</FooterSection.Title>
                                 <FooterSection.List>
-                                    {navigation.marketplace.map((item) => (
+                                    {navigation.features.map((item) => (
                                         <FooterSection.ListItem key={item.name} href={item.href}>
                                             {item.name}
                                         </FooterSection.ListItem>
@@ -104,7 +120,7 @@ const SiteFooter = () => {
                 </div>
                 <Separator className="mb-8 mt-16 sm:mt-20 lg:mt-24" />
                 <p className="text-xs leading-5 text-gray-400">
-                    &copy; {new Date().getFullYear()} FameGuild. All rights reserved.
+                    &copy; {new Date().getFullYear()} U3IS. All rights reserved.
                 </p>
             </Container>
         </footer>
