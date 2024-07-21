@@ -7,14 +7,7 @@ interface LoaderProps {
 }
 
 const Loader = ({ className }: LoaderProps) => {
-    return (
-        <div
-            className={cn(
-                'size-10 animate-spin rounded-full border-4 border-white/10 border-t-indigo-500',
-                className,
-            )}
-        />
-    );
+    return <div className={cn('size-10 animate-spin rounded-full border-4 border-white/10 border-t-primary', className)} />;
 };
 
 Loader.displayName = 'Loader';

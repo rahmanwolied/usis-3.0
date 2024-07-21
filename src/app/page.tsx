@@ -1,42 +1,23 @@
 'use client';
 
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Days, Times } from '@/enums';
+import axios from 'axios';
 import { signOut, useSession } from 'next-auth/react';
 
+import { CourseInfoType } from '@/types/usisReponse.type';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { CourseInfo } from '@/components/shared/features/course-info';
 
 export default function Page() {
     const { status, data: session } = useSession();
-    return (
-        <div className="flex h-screen items-center justify-center gap-5">
-            {status === 'authenticated' ? (
-                <>
-                    <Link href={`/user/${session?.user.username}/profile`}>
-                        <Button>Profile</Button>
-                    </Link>
 
-                    <Button onClick={() => signOut()}>Logout</Button>
-                </>
-            ) : (
-                <>
-                    <Link href="/signup">
-                        <Button>Signup</Button>
-                    </Link>
-                    <Link href="/login">
-                        <Button>Login</Button>
-                    </Link>
-                </>
-            )}
-            <Popover>
-                <PopoverTrigger>Click</PopoverTrigger>
-                <PopoverContent>
-                    <Popover>
-                        <PopoverTrigger>Click</PopoverTrigger>
-                        <PopoverContent>Sex2</PopoverContent>
-                    </Popover>
-                </PopoverContent>
-            </Popover>
+    return (
+        <div className="mt-10 flex justify-center">
+            <CourseInfo />
         </div>
     );
 }

@@ -3,4 +3,4 @@ node_modules
 .next
 build
 .contentlayer
-src/data
+src/data/*

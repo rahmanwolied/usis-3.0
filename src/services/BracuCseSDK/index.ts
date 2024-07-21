@@ -2,7 +2,7 @@ import ApiClient from './apiClient';
 
 const baseURL = 'https://www.cse.sds.bracu.ac.bd';
 
-class BracuCSEIdk {
+class BracuCseSDK {
     private apiClient: ApiClient;
 
     constructor() {
@@ -29,7 +29,6 @@ class BracuCSEIdk {
         }
     }
 
-
     async getCseCourseList(searchQuery: string) {
         try {
             const response = await this.apiClient.get('/course/list', { search: searchQuery });
@@ -49,7 +48,6 @@ class BracuCSEIdk {
             throw error;
         }
     }
-
 }
 
-export default BracuCSEIdk;
+export default BracuCseSDK;

@@ -21,8 +21,8 @@ export function Logo({ variant = 'medium' }: { variant?: 'large' | 'medium' | 's
 
 function U3IS() {
     return (
-        <h1 className="font-bold">
-            U<span className="text-blue-500">3</span>IS
+        <h1 className="font-bold text-accent-foreground/80">
+            U<span className="text-primary">3</span>IS
         </h1>
     );
 }

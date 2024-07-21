@@ -1,4 +1,6 @@
-export const scheduleData = {
+import { UsisScheduleResponseType } from '@/types/usisReponse.type';
+
+export const scheduleData: UsisScheduleResponseType = {
     "page": 1,
     "total": 1,
     "records": 3421,
