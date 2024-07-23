@@ -3,7 +3,6 @@ import { Days, Times } from '@/enums';
 import { ListFilter } from 'lucide-react';
 
 import { CourseInfoType } from '@/types/usisReponse.type';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,10 +12,8 @@ import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, Sele
 import { FilterType } from '.';
 
 interface FilterProps {
-    courses: CourseInfoType[];
-    setCourses: Dispatch<SetStateAction<CourseInfoType[]>>;
-    filters: FilterType<string | Days | Times>[];
-    setFilters: Dispatch<SetStateAction<FilterType<string | Days | Times>[]>>;
+    filters: FilterType[];
+    setFilters: Dispatch<SetStateAction<FilterType[]>>;
 }
 
 const days: Days[] = [Days.Saturday, Days.Sunday, Days.Monday, Days.Tuesday, Days.Wednesday, Days.Thursday, Days.Friday];
@@ -27,6 +24,9 @@ const times: Times[] = [
     Times['10:00 AM'],
     Times['10:05 AM'],
     Times['11:00 AM'],
+    Times['11:10 AM'],
+    Times['12:15 PM'],
+    Times['12:30 PM'],
     Times['02:00 PM'],
     Times['03:05 PM'],
     Times['03:30 PM'],
@@ -34,12 +34,9 @@ const times: Times[] = [
     Times['05:00 PM'],
     Times['06:00 PM'],
     Times['06:30 PM'],
-    Times['11:10 AM'],
-    Times['12:15 PM'],
-    Times['12:30 PM'],
 ];
 
-export function Filter({ courses, setCourses, setFilters, filters }: FilterProps) {
+export function Filter({ setFilters, filters }: FilterProps) {
     const courseRef = useRef<HTMLInputElement>(null);
     const facultyRef = useRef<HTMLInputElement>(null);
     const [day, setDay] = useState<Days>();
@@ -49,7 +46,7 @@ export function Filter({ courses, setCourses, setFilters, filters }: FilterProps
         let courseFilters = filters.find((filter) => filter.name === 'Courses')?.items as string[];
         let facultyFilters = filters.find((filter) => filter.name === 'Faculties')?.items;
         let dayFilters = filters.find((filter) => filter.name === 'Days')?.items;
-        let startTimeFilters = filters.find((filter) => filter.name === 'Start Times')?.items;
+        let timeFilters = filters.find((filter) => filter.name === 'Start Times')?.items;
 
         if (courseRef.current!.value) {
             if (!courseFilters) {
@@ -72,27 +69,15 @@ export function Filter({ courses, setCourses, setFilters, filters }: FilterProps
             }
             if (!dayFilters.includes(day)) dayFilters.push(day);
         }
-        if (time && !startTimeFilters) filters.push({ name: 'Start Times', items: [] });
+        if (time) {
+            if (!timeFilters) {
+                const idx = filters.push({ name: 'Start Times', items: [] });
+                timeFilters = filters[idx - 1].items;
+            }
+            if (!timeFilters.includes(time)) timeFilters.push(time);
+        }
 
-        courses = courses
-            .filter((course) =>
-                !courseFilters ? 1 : courseFilters?.includes(course.code) ? 1 : courseFilters.find((filter) => course.code.includes(filter)),
-            )
-            .filter((course) => (!facultyFilters ? 1 : course.sections.find((section) => facultyFilters?.includes(section.facultyInitial))))
-            .map((course) => ({
-                ...course,
-                sections: course.sections.filter((section) => (!facultyFilters ? 1 : facultyFilters?.includes(section.facultyInitial))),
-            }))
-            .filter((course) => (!dayFilters ? 1 : course.sections.find((section) => section.days.find((day) => dayFilters?.includes(Days[day])))))
-            .map((course) => ({
-                ...course,
-                sections: course.sections.filter((section) => (!dayFilters ? 1 : section.days.find((day) => dayFilters?.includes(Days[day])))),
-            }));
-
-        console.log(courses);
-        setCourses(courses);
-        setFilters(filters);
-        console.log('filters', filters);
+        setFilters([...filters]);
     }
 
     return (
@@ -125,6 +110,25 @@ export function Filter({ courses, setCourses, setFilters, filters }: FilterProps
                                         <>
                                             <SelectItem key={index} value={Days[day]}>
                                                 {Days[day]}
+                                            </SelectItem>
+                                            <SelectSeparator />
+                                        </>
+                                    ))}
+                            </SelectContent>
+                        </Select>
+
+                        <Label>Start Time</Label>
+                        <Select onValueChange={(value: Times) => setTime(value)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Start Time" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-card">
+                                {times
+                                    .filter((time) => !filters.find((filter) => filter.name === 'Start Times')?.items.includes(time))
+                                    .map((time, index) => (
+                                        <>
+                                            <SelectItem key={index} value={Times[time]}>
+                                                {Times[time]}
                                             </SelectItem>
                                             <SelectSeparator />
                                         </>

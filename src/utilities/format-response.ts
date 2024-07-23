@@ -55,7 +55,7 @@ export function formatClassScheduleResponse(response: UsisScheduleResponseType):
         if (section.includes('CLOSED')) {
             closed = true;
         }
-        if (section.includes('S')) {
+        if (section.startsWith('S')) {
             tarc = true;
         }
 
@@ -71,28 +71,36 @@ export function formatClassScheduleResponse(response: UsisScheduleResponseType):
             closed,
         };
 
-        if (addedCourse) {
-            const addedSection = addedCourse.sections.find((section) => section.id === id);
-            if (addedSection) {
-                if (!addedSection.days.includes(Days[courseDay])) addedSection.days.push(Days[courseDay]);
-                addedSection.startTime.push(Times[startTime]);
-                addedSection.endTime.push(Times[endTime]);
+        if (!addedCourse) {
+            const course = {} as CourseInfoType;
+            course.code = courseCode;
+            course.tarc = tarc;
+            course.sections = [sectionInfo];
+            courses.push(course);
+            return;
+        }
+        const addedSection = addedCourse.sections.find((section) => section.id === id);
 
-                addedSection.days.sort((a, b) => a - b);
-                addedSection.startTime.sort((a, b) => a - b);
-                addedSection.endTime.sort((a, b) => b - a);
-                return;
-            }
+        if (!addedSection) {
             addedCourse.sections.push(sectionInfo);
             addedCourse.sections.sort((a, b) => _toNumber(a.section) - _toNumber(b.section));
             return;
         }
 
-        const course = {} as CourseInfoType;
-        course.code = courseCode;
-        course.tarc = tarc;
-        course.sections = [sectionInfo];
-        courses.push(course);
+        const dayIdx = addedSection.days.findIndex((day) => day === Days[courseDay]);
+
+        if (dayIdx === -1 || Math.abs(addedSection.endTime[dayIdx] - Times[startTime]) > 1) {
+            addedSection.days.push(Days[courseDay]);
+            addedSection.startTime.push(Times[startTime]);
+            addedSection.endTime.push(Times[endTime]);
+
+            return;
+        }
+
+        addedSection.startTime[dayIdx] = Math.min(addedSection.startTime[dayIdx], Times[startTime]);
+        addedSection.endTime[dayIdx] = Math.max(addedSection.endTime[dayIdx], Times[endTime]);
+
+        return;
     });
     return courses;
 }

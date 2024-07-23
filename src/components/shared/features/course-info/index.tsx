@@ -9,25 +9,30 @@ import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 import { Filter } from './filter';
+import { FilterBadges } from './filter-badges';
+import { Loading } from './loading';
 import { SectionsInfo } from './sections-info';
 
-export interface FilterType<T> {
+export interface FilterType<T = string | Days | Times> {
     name: string;
     items: T[];
 }
 
 export function CourseInfo() {
     const [courses, setCourses] = useState<CourseInfoType[]>([]);
-    const [coursesCopy, setCoursesCopy] = useState<CourseInfoType[]>([]);
-    const [filters, setFilters] = useState<FilterType<string | Days | Times>[]>([]);
+    const [filters, setFilters] = useState<FilterType[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        axios.get('/api/usis/class-schedule').then((res) => {
+        async function getCourses() {
+            setIsLoading(true);
+            const res = await axios.post('/api/usis/class-schedule', filters);
             console.log(res.data);
             setCourses(res.data);
-            setCoursesCopy(res.data);
-        });
-    }, []);
+            setIsLoading(false);
+        }
+        getCourses();
+    }, [filters]);
 
     return (
         <Card className="md:w-2/3 lg:w-1/2">
@@ -36,53 +41,34 @@ export function CourseInfo() {
                     <CardTitle>Class Schedule Summer 2024</CardTitle>
                     <CardDescription>Class Schedule Summer 2024</CardDescription>
                 </div>
-                <Filter filters={filters} setFilters={setFilters} courses={courses} setCourses={setCoursesCopy} />
+                <Filter filters={filters} setFilters={setFilters} />
             </CardHeader>
             <CardContent>
                 <Separator className="mb-3" />
-                <div className="grid grid-flow-col gap-3">
-                    {filters.map((filter, index) => (
-                        <div className="flex gap-2" key={index}>
-                            {filter.name}
-                            {filter.items.map((item, index) => (
-                                <Badge variant={'secondary'} key={index}>
-                                    {item}
-                                </Badge>
-                            ))}
-                        </div>
-                    ))}
-                </div>
-                <Table>
-                    <TableCaption>Class Schedule</TableCaption>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="text-center">Course</TableHead>
-                            <TableHead className="text-center">Sections</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {coursesCopy?.map((course, index) => (
+                <FilterBadges filters={filters} setFilters={setFilters} />
+                {isLoading ? (
+                    <Loading />
+                ) : (
+                    <Table>
+                        <TableCaption>Class Schedule</TableCaption>
+                        {courses?.map((course, index) => (
                             <TableRow key={index}>
-                                <TableCell>{course?.code}</TableCell>
-                                <TableCell>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead className="text-center">Section</TableHead>
-                                                <TableHead className="text-center">Days</TableHead>
-                                                <TableHead className="text-center">Start</TableHead>
-                                                <TableHead className="text-center">End</TableHead>
-                                                <TableHead className="text-center">Faculty</TableHead>
-                                                <TableHead className="text-center">Room</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <SectionsInfo sections={course?.sections} />
-                                    </Table>
-                                </TableCell>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead colSpan={5} className="text-center">
+                                                {course?.code}
+                                            </TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        <SectionsInfo sections={course.sections} />
+                                    </TableBody>
+                                </Table>
                             </TableRow>
                         ))}
-                    </TableBody>
-                </Table>
+                    </Table>
+                )}
             </CardContent>
         </Card>
     );

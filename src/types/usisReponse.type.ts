@@ -35,7 +35,6 @@ export interface SectionInfo {
     roomNumber: RoomNumber;
     facultyInitial: FacultyInitial;
     facultyName?: string;
-    slot?: number;
     closed: boolean;
 }
 
