@@ -1,32 +1,45 @@
-import { connect } from '@/lib/dbConnect';
-import User from '@/model/User';
 import { NextRequest, NextResponse } from 'next/server';
+import User from '@/model/User';
 import bcryptjs from 'bcryptjs';
 
-connect();
+import { ApiResponse } from '@/types/ApiResponse.type';
+import dbConnect from '@/lib/dbConnect';
 
 export async function POST(request: NextRequest) {
-	try {
-		const reqBody = await request.json();
-		const { token, newPassword } = reqBody;
-		console.log(token);
+    try {
+        await dbConnect();
+        const reqBody = await request.json();
+        const { token, newPassword, username } = reqBody;
 
-		const user = await User.findOne({ resetPasswordCode: token, resetPasswordCodeExpiration: { $gt: Date.now() } });
+        const user = await User.findOne({
+            username,
+            resetPasswordCode: token,
+            resetPasswordCodeExpiration: { $gt: Date.now() },
+        });
 
-		if (!user) {
-			return NextResponse.json({ error: 'Invalid code or code expired' }, { status: 500 });
-		}
-		console.log(user);
+        if (!user) {
+            return NextResponse.json<ApiResponse<null>>(
+                { message: 'Invalid code or code expired', status: 'error' },
+                { status: 500 },
+            );
+        }
+        console.log(user);
 
-		const salt = await bcryptjs.genSalt(10);
-		const hashedPassword = await bcryptjs.hash(newPassword, salt);
-		console.log(hashedPassword);
-		user.password = hashedPassword;
+        const salt = await bcryptjs.genSalt(10);
+        const hashedPassword = await bcryptjs.hash(newPassword, salt);
+        console.log(hashedPassword);
+        user.password = hashedPassword;
 
-		await user.save();
+        await user.save();
 
-		return NextResponse.json({ message: 'Password reset successfully', success: true }, { status: 500 });
-	} catch (error: any) {
-		return NextResponse.json({ error: error.message }, { status: 500 });
-	}
+        return NextResponse.json<ApiResponse<null>>(
+            { message: 'Password reset successfully', status: 'success' },
+            { status: 200 },
+        );
+    } catch (error: any) {
+        return NextResponse.json<ApiResponse<null>>(
+            { message: error.message, status: 'error' },
+            { status: 500 },
+        );
+    }
 }

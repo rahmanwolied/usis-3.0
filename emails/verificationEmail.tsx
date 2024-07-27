@@ -19,7 +19,7 @@ export const VerifyIdentityEmail = ({ validationCode, username }: VerifyIdentity
 				</Section>
 				<Text style={paragraph}>or</Text>
 				<Text style={paragraph}>
-					Click
+					Click{' '}
 					<Link href={`http://localhost:3000/api/users/verify-email?username=${username}&token=${validationCode}`} style={link}>
 						here
 					</Link>{' '}
