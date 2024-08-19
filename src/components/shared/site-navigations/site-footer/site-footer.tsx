@@ -56,10 +56,10 @@ const SiteFooter = () => {
                                     <a href="https://www.github.com/rahmanwolied">Mosheur Rahman Wolied</a>
                                 </li>
                                 <li>
-                                    <a href="https://www.github.com">Nafis Sadique Niloy</a>
+                                    <a href="https://github.com/Nafis588">Nafis Sadique Niloy</a>
                                 </li>
                                 <li>
-                                    <a href="https://www.github.com">Nabanita Sarker</a>
+                                    <a href="https://github.com/NabanitaSarker">Nabanita Sarker</a>
                                 </li>
                             </ul>
                         </p>
