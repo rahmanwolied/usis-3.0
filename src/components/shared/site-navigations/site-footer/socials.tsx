@@ -12,10 +12,7 @@ const Socials = () => {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger>
-                                <Link
-                                    href={item.href}
-                                    target="_blank"
-                                    className="text-gray-500 hover:text-gray-400">
+                                <Link href={item.href} target="_blank" className="text-accent hover:text-gray-400">
                                     <span className="sr-only">{item.name}</span>
                                     <item.icon className="size-6" aria-hidden="true" />
                                 </Link>

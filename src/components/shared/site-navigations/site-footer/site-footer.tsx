@@ -43,20 +43,17 @@ const SiteFooter = () => {
                 Footer
             </h2>
             <Container className="pb-8 pt-16 sm:pt-24 lg:pt-32">
-                <div className="xl:grid xl:grid-cols-4 xl:gap-8">
+                <div className="items-center xl:grid xl:grid-cols-4 xl:gap-8">
                     <div className="space-y-8">
-                        <Logo variant="small" />
-                        <p className="select-none text-sm leading-6 text-gray-300">
-                            All data and features are fetched from the official USIS website. This
-                            is a university project and has no intentions of commercial use. All the
-                            data is owned by BRAC Univerity.
+                        <Logo variant="medium" />
+                        <p className="select-none text-sm leading-6">
+                            All data and features are fetched from the official USIS website. This is a university project and has no intentions of
+                            commercial use. All the data is owned by BRAC Univerity.
                             <br />
                             <h1 className="mt-6 font-bold">Created by:</h1>
                             <ul>
                                 <li>
-                                    <a href="https://www.github.com/rahmanwolied">
-                                        Mosheur Rahman Wolied
-                                    </a>
+                                    <a href="https://www.github.com/rahmanwolied">Mosheur Rahman Wolied</a>
                                 </li>
                                 <li>
                                     <a href="https://www.github.com">Nafis Sadique Niloy</a>
@@ -114,14 +111,9 @@ const SiteFooter = () => {
                             </div>
                         </FooterSection>
                     </div>
-                    <div className="mt-10 select-none xl:mt-0">
-                        <Newsletter />
-                    </div>
                 </div>
                 <Separator className="mb-8 mt-16 sm:mt-20 lg:mt-24" />
-                <p className="text-xs leading-5 text-gray-400">
-                    &copy; {new Date().getFullYear()} U3IS. All rights reserved.
-                </p>
+                <p className="text-xs leading-5 text-gray-400">&copy; {new Date().getFullYear()} U3IS. All rights reserved.</p>
             </Container>
         </footer>
     );
