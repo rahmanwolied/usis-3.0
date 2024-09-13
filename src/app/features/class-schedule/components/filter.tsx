@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { Days, Times } from '@/enums';
 import { ListFilter } from 'lucide-react';
 
-import { CourseInfoType } from '@/types/usisReponse.type';
+import { Course } from '@/types/usisReponse.type';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

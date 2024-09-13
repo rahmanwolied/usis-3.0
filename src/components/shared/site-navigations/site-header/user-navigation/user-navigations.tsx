@@ -31,7 +31,7 @@ const UserNavigations = () => {
                 </DropdownMenuItem>
             </Link>
 
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut()}>
                 <LogOut className="mr-2 size-4" />
                 <span>Logout</span>
             </DropdownMenuItem>

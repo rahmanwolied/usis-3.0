@@ -13,21 +13,22 @@ export interface UsisScheduleType {
     class: string;
     id: SectionID;
 }
-export interface CourseInfoType {
+
+export interface Course {
     code: CourseCode;
     tarc: boolean;
     title?: string;
     rating?: number;
-    reviews?: CourseReviewType[];
-    sections: SectionInfo[];
+    reviews?: CourseReview[];
+    sections: Section[];
 }
-export interface CourseReviewType {
+export interface CourseReview {
     reviewer: Username;
     message: string;
     hearts: number;
 }
-export interface SectionInfo {
-    id: SectionID;
+export interface Section {
+    number: SectionID;
     section: string;
     days: Days[];
     startTime: Times[];

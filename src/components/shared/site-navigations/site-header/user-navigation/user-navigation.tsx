@@ -16,7 +16,7 @@ const UserNavigation = () => {
             <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
                     <Avatar>
-                        <AvatarImage src="" />
+                        <AvatarImage src={session?.user.image!} />
                         <AvatarFallback />
                     </Avatar>
                 </Button>

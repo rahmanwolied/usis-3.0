@@ -1,10 +1,10 @@
 import { Days, Times } from '@/enums';
 
-import { SectionInfo } from '@/types/usisReponse.type';
+import { Section } from '@/types/usisReponse.type';
 import { cn } from '@/lib/utils';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-export function SectionsInfo({ sections }: { sections: SectionInfo[] }) {
+export function SectionsInfo({ sections }: { sections: Section[] }) {
     return (
         <>
             {sections.map((section, index) => (
