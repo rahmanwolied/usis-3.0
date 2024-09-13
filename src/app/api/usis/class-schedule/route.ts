@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { scheduleData } from '@/data/schedule-data';
 import { Days, Times } from '@/enums';
-import UsisSDK from '@/services/usisSDK';
+import UsisSDK from '@/services/usis-sdk';
 import { formatClassScheduleResponse } from '@/utilities/format-response';
 
 import { CourseInfoType } from '@/types/usisReponse.type';
-import { FilterType } from '@/components/shared/features/course-info';
+import { FilterType } from '@/app/features/class-schedule/components/course-info';
 
 export async function POST(request: NextRequest) {
     const filters: FilterType[] = await request.json();

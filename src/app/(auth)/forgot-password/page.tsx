@@ -8,18 +8,11 @@ import { Loader2 } from 'lucide-react';
 import { getSession } from 'next-auth/react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
-import { set, z } from 'zod';
+import { z } from 'zod';
 
 import { ApiResponseInitialState } from '@/lib/initialStates';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
@@ -78,9 +71,7 @@ export default function Login() {
                     ) : (
                         <Card>
                             <CardHeader>
-                                <CardTitle className="text-3xl font-bold">
-                                    Forgot Password
-                                </CardTitle>
+                                <CardTitle className="text-3xl font-bold">Forgot Password</CardTitle>
                                 <CardDescription className="text-balance">
                                     Enter your email and we will send you a link
                                     <br /> to reset your password
@@ -103,15 +94,8 @@ export default function Login() {
                                                 )}
                                             />
                                         </Form>
-                                        <Button
-                                            type="submit"
-                                            className="w-full"
-                                            onClick={(e) => setSubmitting(true)}>
-                                            {submitting ? (
-                                                <Loader2 className="animate-spin" />
-                                            ) : (
-                                                'Submit'
-                                            )}
+                                        <Button type="submit" className="w-full" onClick={(e) => setSubmitting(true)}>
+                                            {submitting ? <Loader2 className="animate-spin" /> : 'Submit'}
                                         </Button>
                                     </form>
                                     <p aria-live="polite" className="sr-only">

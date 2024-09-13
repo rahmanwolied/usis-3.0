@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 
-import { CourseInfo } from '@/components/shared/features/course-info';
+import { CourseInfo } from '@/app/features/class-schedule/components/course-info';
 
 export default function Page() {
     const { status, data: session } = useSession();
