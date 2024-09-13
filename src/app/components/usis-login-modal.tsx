@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Form } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 
 import CookieTutorial from './cookie-tutorial';
 
@@ -20,11 +20,13 @@ const schema = z.object({
 
 export default function UsisLoginModal() {
     const [open, setOpen] = useState(false);
-    const form = useForm({
+    const form = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema),
     });
 
-    const onSubmit = (data: any) => {
+    const { isSubmitting } = form.formState;
+
+    const onSubmit = (data: z.infer<typeof schema>) => {
         console.log(data);
         setOpen(false);
     };
@@ -35,7 +37,7 @@ export default function UsisLoginModal() {
                 <DialogTrigger asChild>
                     <Button variant="outline">Enter USIS Cookie</Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Enter USIS Cookie</DialogTitle>
                     </DialogHeader>
@@ -45,12 +47,39 @@ export default function UsisLoginModal() {
                     </DialogDescription>
                     <CookieTutorial />
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <Button type="submit" className="w-full">
-                                {isSubmitting ? <Loader2 className="animate-spin" /> : 'Sign Up'}
-                            </Button>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            <FormField
+                                control={form.control}
+                                name="JSESSIONID"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>JSESSIONID</FormLabel>
+                                        <FormControl>
+                                            <Input autoComplete="off" className="w-3/4" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="SRVNAME"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>SRVNAME</FormLabel>
+                                        <FormControl>
+                                            <Input autoComplete="off" className="w-3/4" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                         </form>
                     </Form>
+                    <DialogFooter className="flex w-full justify-center">
+                        <Button onClick={() => setOpen(false)}>Cancel</Button>
+                        <Button onClick={form.handleSubmit(onSubmit)}>{isSubmitting ? <Loader2 className="animate-spin" /> : 'Submit'}</Button>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
         </div>

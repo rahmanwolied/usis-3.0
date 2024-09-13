@@ -7,16 +7,16 @@ interface CustomError extends Error {
 class ApiClient {
     private client: AxiosInstance;
     private cookie: { jsessionid: string; srvname: string } = {
-        jsessionid: 'E9DDE5C32733555E035654C9D72058BF',
-        srvname: 'USISRAX',
+        jsessionid: '764B30EFBB29FF64BDC06C0D10DA1EE4',
+        srvname: 'USISQXX',
     };
 
-    constructor() {
+    constructor(cookie?: { jsessionid: string; srvname: string }) {
         this.client = axios.create({
             baseURL: 'https://usis.bracu.ac.bd/academia',
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.118 Safari/537.36',
-                Cookie: `JSESSIONID=${this.cookie?.jsessionid}; SRVNAME=${this.cookie?.srvname}`,
+                Cookie: `JSESSIONID=${cookie?.jsessionid ?? this.cookie?.jsessionid}; SRVNAME=${cookie?.srvname ?? this.cookie?.srvname}`,
             },
         });
 
