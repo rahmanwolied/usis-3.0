@@ -40,7 +40,7 @@ export default class UsisSDK {
     async showGradesheet() {
         const params = {};
 
-        const response = await this.apiClient.post('studentCourse/loadPreviousResultByStuden', null, { params });
+        const response = await this.apiClient.post('studentCourse/loadPreviousResultByStudent', null, { params });
         return response.data;
     }
 
