@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 
-import { FilterType } from '.';
+import { FilterType } from './course-info';
 
 interface FilterBadgesProps {
     filters: FilterType[];
