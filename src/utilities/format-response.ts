@@ -1,6 +1,6 @@
 import { Days, Times } from '@/enums';
 
-import type { CourseInfoType, SectionInfo, UsisScheduleResponseType } from '@/types/usisReponse.type';
+import type { Course, Section, UsisScheduleResponseType } from '@/types/usisReponse.type';
 
 function _toNumber(section: string) {
     if (section.startsWith('S')) {
@@ -46,8 +46,8 @@ function sortTimes(response: UsisScheduleResponseType): void {
     );
 }
 
-export function formatClassScheduleResponse(response: UsisScheduleResponseType): CourseInfoType[] {
-    const courses: CourseInfoType[] = [];
+export function formatClassScheduleResponse(response: UsisScheduleResponseType): Course[] {
+    const courses: Course[] = [];
     response.rows.forEach((row) => {
         let [rowCount, id, courseCode, facultyInitial, section, courseDay, startTime, endTime, roomNumber] = row.cell;
         let tarc = false;
@@ -60,26 +60,26 @@ export function formatClassScheduleResponse(response: UsisScheduleResponseType):
         }
 
         const addedCourse = courses.find((course) => course.code === courseCode);
-        const sectionInfo: SectionInfo = {
+        const sectionInfo: Section = {
             days: [Days[courseDay]],
             startTime: [Times[startTime]],
             endTime: [Times[endTime]],
             facultyInitial,
-            id,
+            number: id,
             section,
             roomNumber,
             closed,
         };
 
         if (!addedCourse) {
-            const course = {} as CourseInfoType;
+            const course = {} as Course;
             course.code = courseCode;
             course.tarc = tarc;
             course.sections = [sectionInfo];
             courses.push(course);
             return;
         }
-        const addedSection = addedCourse.sections.find((section) => section.id === id);
+        const addedSection = addedCourse.sections.find((section) => section.number === id);
 
         if (!addedSection) {
             addedCourse.sections.push(sectionInfo);

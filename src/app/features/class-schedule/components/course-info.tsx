@@ -1,8 +1,10 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { Days, Times } from '@/enums';
 import axios from 'axios';
 
-import { CourseInfoType } from '@/types/usisReponse.type';
+import { Course } from '@/types/usisReponse.type';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -19,7 +21,7 @@ export interface FilterType<T = string | Days | Times> {
 }
 
 export function CourseInfo() {
-    const [courses, setCourses] = useState<CourseInfoType[]>([]);
+    const [courses, setCourses] = useState<Course[]>([]);
     const [filters, setFilters] = useState<FilterType[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 

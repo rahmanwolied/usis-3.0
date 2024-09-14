@@ -3,7 +3,6 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 
 export function Loading() {
     const arr = [1, 2, 3, 4, 5, 6, 7, 7, 10];
-    console.log(arr);
     return (
         <Table>
             <TableCaption>Class Schedule</TableCaption>

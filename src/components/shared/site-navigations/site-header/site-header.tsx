@@ -13,7 +13,7 @@ import { ThemeSwitcher } from './theme-switcher';
 import UserNavigation from './user-navigation';
 
 const SiteHeader = () => {
-    const { status } = useSession();
+    const { status, data } = useSession();
     return (
         <header className="sticky top-0 z-50 w-full bg-black/5 backdrop-blur supports-[backdrop-filter]:bg-black/10">
             <Container className="flex h-16 items-center justify-between">

@@ -4,7 +4,7 @@ import { Days, Times } from '@/enums';
 import UsisSDK from '@/services/usis-sdk';
 import { formatClassScheduleResponse } from '@/utilities/format-response';
 
-import { CourseInfoType } from '@/types/usisReponse.type';
+import { Course } from '@/types/usisReponse.type';
 import { FilterType } from '@/app/features/class-schedule/components/course-info';
 
 export async function POST(request: NextRequest) {
@@ -13,7 +13,6 @@ export async function POST(request: NextRequest) {
     const usis = new UsisSDK();
     const data = await usis.getClassSchedule();
 
-    // const data = scheduleData;
     const res = formatClassScheduleResponse(data);
 
     const filtered = applyFilter(res, filters);
@@ -21,7 +20,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(filtered);
 }
 
-function applyFilter(courses: CourseInfoType[], filters: FilterType[]) {
+function applyFilter(courses: Course[], filters: FilterType[]) {
     let courseFilters = filters.find((filter) => filter.name === 'Courses')?.items as string[];
     let facultyFilters = filters.find((filter) => filter.name === 'Faculties')?.items;
     let dayFilters = filters.find((filter) => filter.name === 'Days')?.items;
