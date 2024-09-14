@@ -58,4 +58,11 @@ export default class UsisSDK {
         const response = await this.apiClient.get('studentCourse/showCourseStatusList', params);
         return response.data;
     }
+
+
+    async getStudentProfile() {
+        const response = await this.apiClient.post('studentProfile/showProfile', null, {});
+        return response.data;
+    }
+
 }
