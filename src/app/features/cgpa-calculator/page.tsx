@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { FaTrashAlt } from 'react-icons/fa'; 
 
 type Course = {
   name: string;
@@ -15,30 +16,41 @@ type Semester = {
 
 export default function CGPACalculator() {
   const [semesters, setSemesters] = useState<Semester[]>([
-    { semesterName: '', courses: [{ name: '', grade: 0, credit: 3 }] }, // Default credit is 3
+    { semesterName: '', courses: [{ name: '', grade: 0, credit: 3 }] }, 
   ]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); 
 
-  // BRAC University Grading System
+ 
   const gradingScale: { [key: string]: number } = {
     A: 4.0,
-    "A-": 3.7,
-    "B+": 3.3,
+    'A-': 3.7,
+    'B+': 3.3,
     B: 3.0,
-    "B-": 2.7,
-    "C+": 2.3,
+    'B-': 2.7,
+    'C+': 2.3,
     C: 2.0,
-    "C-": 1.7,
+    'C-': 1.7,
     D: 1.0,
     F: 0.0,
   };
 
-  // Handle changes for semester name
+
   const handleSemesterChange = (index: number, value: string) => {
     const updatedSemesters = [...semesters];
     updatedSemesters[index].semesterName = value;
     setSemesters(updatedSemesters);
   };
 
+
+  const isDuplicateCourse = (semesterIndex: number, courseName: string, courseIndex?: number) => {
+    if (!courseName.trim()) {
+  
+      return false;
+    }
+  
+    const courses = semesters[semesterIndex].courses;
+    return courses.some((course, index) => course.name.toLowerCase() === courseName.toLowerCase() && index !== courseIndex);
+  };
   // Handle changes for course details
   const handleCourseChange = (
     semesterIndex: number,
@@ -48,35 +60,58 @@ export default function CGPACalculator() {
   ) => {
     const updatedSemesters = [...semesters];
     const courseName = field === 'name' ? (value as string).toLowerCase() : updatedSemesters[semesterIndex].courses[courseIndex].name.toLowerCase();
-
-    // Update the course data in the current semester
-    if (field === 'name' || field === 'grade' || field === 'credit') {
+  
+    if (!updatedSemesters[semesterIndex].semesterName.trim()) {
+      setErrorMessage('Please enter a semester name before adding courses.');
+      return;
+    }
+  
+    if (field === 'name' && isDuplicateCourse(semesterIndex, courseName, courseIndex)) {
+      setErrorMessage(`The course "${courseName}" is already in ${semesters[semesterIndex].semesterName}.`);
+      return;
+    }
+  
+    setErrorMessage(null);   
+       if (field === 'name' || field === 'grade' || field === 'credit') {
       updatedSemesters[semesterIndex].courses[courseIndex][field] = value as never;
     }
-
+  
     setSemesters(updatedSemesters);
   };
 
-  // Add a new semester
+
   const addSemester = () => {
     setSemesters([
       ...semesters,
-      { semesterName: '', courses: [{ name: '', grade: 0, credit: 3 }] }, // Default credit is 3
+      { semesterName: '', courses: [{ name: '', grade: 0, credit: 3 }] },
     ]);
   };
 
   // Add a new course
   const addCourse = (semesterIndex: number) => {
     const updatedSemesters = [...semesters];
+    if (!updatedSemesters[semesterIndex].semesterName.trim()) {
+      setErrorMessage('Please enter a semester name before adding courses.');
+      return;
+    }
+  
     updatedSemesters[semesterIndex].courses.push({
       name: '',
       grade: 0,
-      credit: 3, // Default credit is 3
+      credit: 3, 
     });
+    setErrorMessage(null); 
     setSemesters(updatedSemesters);
   };
 
-  // Calculate CGPA and total credits
+  // Delete a course
+  const deleteCourse = (semesterIndex: number, courseIndex: number) => {
+    const updatedSemesters = [...semesters];
+    updatedSemesters[semesterIndex].courses.splice(courseIndex, 1);
+    setSemesters(updatedSemesters);
+  };
+
+  
   const calculateCGPA = () => {
     let totalCredits = 0;
     let totalGradePoints = 0;
@@ -90,7 +125,7 @@ export default function CGPACalculator() {
       });
     });
 
-    // Now calculate CGPA based on tracked courses
+
     Object.values(courseTracker).forEach((course) => {
       totalGradePoints += course.grade * course.credit;
       totalCredits += course.credit;
@@ -100,11 +135,29 @@ export default function CGPACalculator() {
     return { cgpa, totalCredits };
   };
 
+
+  const calculateTotalCreditsAttempted = () => {
+    let totalCreditsAttempted = 0;
+    semesters.forEach((semester) => {
+      semester.courses.forEach((course) => {
+        totalCreditsAttempted += course.credit;
+      });
+    });
+    return totalCreditsAttempted;
+  };
+
   const { cgpa, totalCredits } = calculateCGPA();
+  const totalCreditsAttempted = calculateTotalCreditsAttempted();
 
   return (
     <div className="p-4">
       <h1 className="text-center text-xl font-bold mb-4">CGPA Calculator</h1>
+
+      {errorMessage && (
+        <div className="text-red-500 text-center mb-4">
+          {errorMessage}
+        </div>
+      )}
 
       {semesters.map((semester, semesterIndex) => (
         <div key={semesterIndex} className="mb-6">
@@ -116,7 +169,7 @@ export default function CGPACalculator() {
             className="border rounded p-2 w-full mb-2"
           />
           {semester.courses.map((course, courseIndex) => (
-            <div key={courseIndex} className="flex gap-2 mb-2">
+            <div key={courseIndex} className="flex gap-2 mb-2 items-center">
               <input
                 type="text"
                 placeholder="Course Name"
@@ -143,7 +196,7 @@ export default function CGPACalculator() {
               <input
                 type="number"
                 placeholder="Credit"
-                value={course.credit || 3} // Default credit is 3
+                value={course.credit || 3} 
                 onChange={(e) =>
                   handleCourseChange(
                     semesterIndex,
@@ -153,6 +206,10 @@ export default function CGPACalculator() {
                   )
                 }
                 className="border rounded p-2 flex-1"
+              />
+              <FaTrashAlt
+                onClick={() => deleteCourse(semesterIndex, courseIndex)}
+                className="text-red-500 cursor-pointer"
               />
             </div>
           ))}
@@ -172,7 +229,8 @@ export default function CGPACalculator() {
 
       <div className="mt-6">
         <h2 className="text-center text-lg font-bold">Your CGPA: {cgpa}</h2>
-        <h2 className="text-center text-lg font-bold">Total Credits: {totalCredits}</h2>
+        <h2 className="text-center text-lg font-bold">Total Credits Earned: {totalCredits}</h2>
+        <h2 className="text-center text-lg font-bold">Total Credits Attempted: {totalCreditsAttempted}</h2>
       </div>
     </div>
   );
