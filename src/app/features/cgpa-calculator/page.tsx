@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FaTrashAlt } from 'react-icons/fa'; // Importing trash icon for delete
+import { FaTrashAlt } from 'react-icons/fa'; 
 
 type Course = {
   name: string;
@@ -16,11 +16,11 @@ type Semester = {
 
 export default function CGPACalculator() {
   const [semesters, setSemesters] = useState<Semester[]>([
-    { semesterName: '', courses: [{ name: '', grade: 0, credit: 3 }] }, // Default credit is 3
+    { semesterName: '', courses: [{ name: '', grade: 0, credit: 3 }] }, 
   ]);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Error message state
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); 
 
-  // BRAC University Grading System
+ 
   const gradingScale: { [key: string]: number } = {
     A: 4.0,
     'A-': 3.7,
@@ -34,17 +34,17 @@ export default function CGPACalculator() {
     F: 0.0,
   };
 
-  // Handle changes for semester name
+
   const handleSemesterChange = (index: number, value: string) => {
     const updatedSemesters = [...semesters];
     updatedSemesters[index].semesterName = value;
     setSemesters(updatedSemesters);
   };
 
-  // Check if the course is already in the semester
+
   const isDuplicateCourse = (semesterIndex: number, courseName: string, courseIndex?: number) => {
     if (!courseName.trim()) {
-      // If the course name is empty or only contains whitespace, do not count it as a duplicate
+  
       return false;
     }
   
@@ -71,21 +71,19 @@ export default function CGPACalculator() {
       return;
     }
   
-    setErrorMessage(null); // Reset error if no duplicates
-  
-    // Update the course data in the current semester
-    if (field === 'name' || field === 'grade' || field === 'credit') {
+    setErrorMessage(null);   
+       if (field === 'name' || field === 'grade' || field === 'credit') {
       updatedSemesters[semesterIndex].courses[courseIndex][field] = value as never;
     }
   
     setSemesters(updatedSemesters);
   };
 
-  // Add a new semester
+
   const addSemester = () => {
     setSemesters([
       ...semesters,
-      { semesterName: '', courses: [{ name: '', grade: 0, credit: 3 }] }, // Default credit is 3
+      { semesterName: '', courses: [{ name: '', grade: 0, credit: 3 }] },
     ]);
   };
 
@@ -100,9 +98,9 @@ export default function CGPACalculator() {
     updatedSemesters[semesterIndex].courses.push({
       name: '',
       grade: 0,
-      credit: 3, // Default credit is 3
+      credit: 3, 
     });
-    setErrorMessage(null); // Reset error when adding a course
+    setErrorMessage(null); 
     setSemesters(updatedSemesters);
   };
 
@@ -113,7 +111,7 @@ export default function CGPACalculator() {
     setSemesters(updatedSemesters);
   };
 
-  // Calculate CGPA and total credits
+  
   const calculateCGPA = () => {
     let totalCredits = 0;
     let totalGradePoints = 0;
@@ -127,7 +125,7 @@ export default function CGPACalculator() {
       });
     });
 
-    // Now calculate CGPA based on tracked courses
+
     Object.values(courseTracker).forEach((course) => {
       totalGradePoints += course.grade * course.credit;
       totalCredits += course.credit;
@@ -137,7 +135,7 @@ export default function CGPACalculator() {
     return { cgpa, totalCredits };
   };
 
-  // Calculate total credits attempted
+
   const calculateTotalCreditsAttempted = () => {
     let totalCreditsAttempted = 0;
     semesters.forEach((semester) => {
@@ -198,7 +196,7 @@ export default function CGPACalculator() {
               <input
                 type="number"
                 placeholder="Credit"
-                value={course.credit || 3} // Default credit is 3
+                value={course.credit || 3} 
                 onChange={(e) =>
                   handleCourseChange(
                     semesterIndex,
