@@ -3,8 +3,8 @@ import ApiClient from './apiClient';
 export default class UsisSDK {
     private apiClient: ApiClient;
 
-    constructor() {
-        this.apiClient = new ApiClient();
+    constructor(cookie?: { jsessionid: string; srvname: string }) {
+        this.apiClient = new ApiClient(cookie);
     }
 
     async getAcdemicSession(year: string, semester: string) {
@@ -56,6 +56,13 @@ export default class UsisSDK {
             sord: 'desc',
         };
         const response = await this.apiClient.get('studentCourse/showCourseStatusList', params);
+        return response.data;
+    }
+
+    async getProfile() {
+        const params = {};
+
+        const response = await this.apiClient.get('student/showProfile', params);
         return response.data;
     }
 }

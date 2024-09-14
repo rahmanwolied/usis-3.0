@@ -31,11 +31,7 @@ export default async function Page() {
     const advisedCourseRows = rows2.filter((row) => {
         const columns = row.querySelectorAll('td');
         return columns.length > 0 && columns[0].text.trim().match(/[A-Z]{3}\d{3}/);
-
-
     });
-
-
 
     const advisedCourses = advisedCourseRows.map((row) => {
         const columns = row.querySelectorAll('td');
@@ -49,33 +45,31 @@ export default async function Page() {
     const suggestedCourses = prereq.courses
         .filter((courseItem) => {
             // Check if all hard prerequisites are in the courses array
-            return courseItem.hard_pre_requisite.every(prereqCourse => courses.includes(prereqCourse));
+            return courseItem.hard_pre_requisite.every((prereqCourse) => courses.includes(prereqCourse));
         })
-        .map(courseItem => courseItem.course) // Extract only the course names
-        .filter(course => !courses.includes(course)); // Remove courses that are already in the courses array
+        .map((courseItem) => courseItem.course) // Extract only the course names
+        .filter((course) => !courses.includes(course)); // Remove courses that are already in the courses array
 
     console.log(suggestedCourses);
 
-
     const validSuggestions = suggestedCourses
-        .filter(course => allCourses.includes(course)) // Keep only courses present in allCourses
-        .filter(course => !advisedCourses.includes(course)); // Remove courses that are also in advisedCourses
+        .filter((course) => allCourses.includes(course)) // Keep only courses present in allCourses
+        .filter((course) => !advisedCourses.includes(course)); // Remove courses that are also in advisedCourses
     console.log(validSuggestions);
 
     // Generate an array with soft prerequisites information
-    const detailedSuggestions = validSuggestions.map(course => {
-        const courseDetails = prereq.courses.find(c => c.course === course);
+    const detailedSuggestions = validSuggestions.map((course) => {
+        const courseDetails = prereq.courses.find((c) => c.course === course);
         return {
             course,
-            softPreRequisites: courseDetails ? courseDetails.soft_pre_requisite : []
+            softPreRequisites: courseDetails ? courseDetails.soft_pre_requisite : [],
         };
     });
-
 
     return (
         <div className="mt-10">
             <h1>Course Suggestion</h1>
-            <div className="container flex flex-grid items-center justify-center gap-3">
+            <div className="flex-grid container flex items-center justify-center gap-3">
                 {detailedSuggestions.map((detail, index) => (
                     <Card key={index} className="w-1/5">
                         <CardHeader>
@@ -92,7 +86,7 @@ export default async function Page() {
                                     </ul>
                                 </div>
                             ) : (
-                                ""
+                                ''
                             )}
                         </CardFooter>
                     </Card>

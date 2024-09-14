@@ -4,5 +4,6 @@ import UsisSDK from '@/services/usis-sdk';
 export async function GET(request: NextRequest) {
     const usis = new UsisSDK();
     const data = await usis.showGradesheet();
+
     return NextResponse.json(data);
 }

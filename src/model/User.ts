@@ -1,10 +1,14 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
+import { courseSchema } from './Schedule';
+
 interface Grade extends Document {
-    course: string;
+    courseCode: string;
+    courseTitle: string;
+    credit: string;
+    creditEarned: string;
     grade: string;
-    semester: string;
-    year: string;
+    gradePoint: string;
 }
 
 export interface User extends Document {
@@ -21,8 +25,20 @@ export interface User extends Document {
     resetPasswordCode?: string | null;
     resetPasswordCodeExpiration?: Date | null;
     schedule: Schema.Types.ObjectId;
-    grades: Grade[];
-    advisedCourses: Schema.Types.ObjectId[];
+    grades: { courseCode: string; courseTitle: string; credit: string; creditEarned: string; grade: string; gradePoint: string }[];
+    advisedCourses: {
+        code: string;
+        title: string;
+        section: string;
+        faculty: string;
+        credit: string;
+    }[];
+    isUsisConnected: boolean;
+    program: string;
+    studentId: string;
+    mobile: string;
+    homePhone: string;
+    bloodGroup: string;
 }
 
 export const userSchema: Schema<User> = new Schema({
@@ -74,20 +90,34 @@ export const userSchema: Schema<User> = new Schema({
     },
     grades: [
         {
-            course: String,
+            courseCode: String,
+            courseTitle: String,
+            credit: String,
+            creditEarned: String,
             grade: String,
-            semester: String,
-            year: String,
+            gradePoint: String,
         },
     ],
     advisedCourses: [
         {
-            type: Schema.Types.ObjectId,
-            ref: 'Course',
+            code: String,
+            title: String,
+            section: String,
+            faculty: String,
+            credit: String,
         },
     ],
+    isUsisConnected: {
+        type: Boolean,
+        default: false,
+    },
+    program: String,
+    studentId: String,
+    mobile: String,
+    homePhone: String,
+    bloodGroup: String,
 });
 
-const UserModel = (mongoose.models.User as mongoose.Model<User>) || mongoose.model<User>('User', userSchema);
+const UserModel = (mongoose.models?.User as mongoose.Model<User>) || mongoose.model<User>('User', userSchema);
 
 export default UserModel;

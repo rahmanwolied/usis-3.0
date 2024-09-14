@@ -13,7 +13,6 @@ export async function POST(request: NextRequest) {
     const usis = new UsisSDK();
     const data = await usis.getClassSchedule();
 
-    // const data = scheduleData;
     const res = formatClassScheduleResponse(data);
 
     const filtered = applyFilter(res, filters);
