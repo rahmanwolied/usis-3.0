@@ -1,4 +1,10 @@
-export function Logo({ variant = 'medium' }: { variant?: 'large' | 'medium' | 'small' }) {
+import { FaGraduationCap } from 'react-icons/fa';
+
+export function Logo({
+    variant = 'medium',
+}: {
+    variant?: 'large' | 'medium' | 'small';
+}) {
     if (variant === 'large') {
         return (
             <div className="text-9xl">
@@ -22,7 +28,12 @@ export function Logo({ variant = 'medium' }: { variant?: 'large' | 'medium' | 's
 function U3IS() {
     return (
         <h1 className="font-bold text-foreground/80">
-            U<span className="text-primary">3</span>IS
+            <div className="flex items-center gap-2">
+                <FaGraduationCap className="text-primary" />
+                <div>
+                    U<span className="text-primary">3</span>IS
+                </div>
+            </div>
         </h1>
     );
 }
