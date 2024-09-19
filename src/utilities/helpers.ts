@@ -64,10 +64,7 @@ export function _toNumber(section: string) {
     return Number(section.slice(0, 2));
 }
 
-export function extractAndCombineTimes(timeString: string): {
-    startTime: string;
-    endTime: string;
-} {
+export function extractAndCombineTimes(timeString: string) {
     const timePattern = /(\d{1,2}:\d{2} (?:AM|PM))-(\d{1,2}:\d{2} (?:AM|PM))/g;
     const startTimes: string[] = [];
     const endTimes: string[] = [];
@@ -89,4 +86,82 @@ export function extractAndCombineTimes(timeString: string): {
     }
 
     return { startTime: startTimes[0], endTime: endTimes[0] };
+}
+
+export function extractDayTimeRoom(scheduleString: string) {
+    const regex =
+        /([A-Za-z]{2})\((\d{2}:\d{2} [APM]{2})-(\d{2}:\d{2} [APM]{2})-([A-Za-z0-9-]+)\)/g;
+    let matches = [];
+    let match;
+    const fullDay = {
+        Sa: 'Saturday',
+        Su: 'Sunday',
+        Mo: 'Monday',
+        Tu: 'Tuesday',
+        We: 'Wednesday',
+        Th: 'Thursday',
+        Fr: 'Friday',
+    };
+    while ((match = regex.exec(scheduleString)) !== null) {
+        matches.push({
+            day: fullDay[match[1] as keyof typeof fullDay],
+            startTime: match[2],
+            endTime: match[3],
+            room: match[4],
+        });
+    }
+
+    const theory = matches
+        .filter((match) => match.room.slice(-1) === 'C')
+        .reduce(
+            (acc, curr) => {
+                acc.days.push(curr.day);
+                acc.startTimes.push(curr.startTime);
+                acc.endTimes.push(curr.endTime);
+                acc.roomNumber = curr.room;
+                return acc;
+            },
+            {
+                days: [] as string[],
+                startTimes: [] as string[],
+                endTimes: [] as string[],
+                roomNumber: '',
+            },
+        );
+
+    if (matches.filter((match) => match.room.slice(-1) === 'L').length === 0)
+        return { theory, labs: undefined };
+
+    const labs = matches
+        .filter((match) => match.room.slice(-1) === 'L')
+        .reduce(
+            (acc, curr) => {
+                acc.days.push(curr.day);
+                acc.startTimes.push(curr.startTime);
+                acc.endTimes.push(curr.endTime);
+                acc.roomNumber = curr.room;
+                return acc;
+            },
+            {
+                days: [] as string[],
+                startTimes: [] as string[],
+                endTimes: [] as string[],
+                roomNumber: '',
+            },
+        );
+
+    if (labs.days.every((val, i, arr) => val === arr[0])) {
+        const startTime = Math.min(
+            ...labs.startTimes.map((time) => Times.indexOf(time)),
+        );
+        const endTime = Math.max(
+            ...labs.endTimes.map((time) => Times.indexOf(time)),
+        );
+        labs.days = [labs.days[0]];
+        labs.startTimes = [Times[startTime]];
+        labs.endTimes = [Times[endTime]];
+        labs.roomNumber = labs.roomNumber[0];
+    }
+
+    return { labs, theory };
 }
