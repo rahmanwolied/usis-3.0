@@ -15,9 +15,11 @@ import {
     extractDayTimeRoom,
 } from './helpers';
 
+type RoomSchedule = ReturnType<typeof getClassroomsFromSchedule>;
+
 export function formatClassScheduleWithLab(
     rows: USISClassScheduleWithLabs[],
-    classRoomInfo: [string, string, string[], string[], string[], string[]][],
+    minimizedCourseInfo: RoomSchedule,
 ): Course[] {
     const courses: Course[] = [];
     rows.forEach((row) => {
@@ -45,70 +47,43 @@ export function formatClassScheduleWithLab(
         const isTarc = section.startsWith('S');
         const isClosed = section.includes('CLOSED');
 
-        const _days = [
-            'Sunday',
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday',
-        ];
-
-        const days: string[] = [];
-        const startTimes: string[] = [];
-        const endTimes: string[] = [];
-
-        for (let i = 11; i < 18; i++) {
-            if (row.cell[i]) {
-                days.push(_days[i - 11]);
-                const { startTime, endTime } = extractAndCombineTimes(
-                    row.cell[i] as string,
-                );
-                startTimes.push(startTime);
-                endTimes.push(endTime);
-            }
-        }
+        const minimizedSectionInfo = minimizedCourseInfo
+            .find((course) => course.courseCode === courseCode)
+            ?.sections.find((_section) => _section.number === section);
 
         const sectionInfo: Section = {
-            days,
-            startTimes,
-            endTimes,
+            ...minimizedSectionInfo!,
             facultyInitial,
-            number: section,
             roomNumber: '',
             closed: isClosed,
             examDate,
             examDay,
             facultyName,
+            seats,
         };
 
         const addedCourse = courses.find(
             (course) => course.code === courseCode,
         );
+
         if (!addedCourse) {
-            const course = {} as Course;
-            course.code = courseCode;
-            course.tarc = isTarc;
-            course.title = courseTitle;
-            course.faculties = [facultyInitial];
-            course.sections = [sectionInfo];
+            const course = {
+                code: courseCode,
+                tarc: isTarc,
+                title: courseTitle,
+                faculties: [facultyInitial],
+                sections: [sectionInfo],
+                department,
+                program,
+            };
             courses.push(course);
             return;
         }
-        const addedSection = addedCourse.sections.find(
-            (_section) => _section.number === section,
+
+        addedCourse.sections.push(sectionInfo);
+        addedCourse.sections.sort(
+            (a, b) => _toNumber(a.number) - _toNumber(b.number),
         );
-
-        if (!addedSection) {
-            addedCourse.sections.push(sectionInfo);
-            addedCourse.sections.sort(
-                (a, b) => _toNumber(a.number) - _toNumber(b.number),
-            );
-            return;
-        }
-
-        return;
     });
     return courses;
 }
@@ -116,25 +91,30 @@ export function formatClassScheduleWithLab(
 export function getClassroomsFromSchedule(html: string) {
     const document = parse(html);
     const rows = document.querySelectorAll('#customers tbody tr');
-    const result = Array<{
+    const result: {
         courseCode: string;
         sections: {
-            section: string;
+            number: string;
             days: string[];
             startTimes: string[];
             endTimes: string[];
-            roomNumbers: string[];
+            roomNumber: string;
+            lab?: {
+                days: string[];
+                startTimes: string[];
+                endTimes: string[];
+                roomNumber: string;
+            };
         }[];
-    }>();
+    }[] = [];
 
     rows.forEach((row) => {
         const cells = row.querySelectorAll('td');
         const courseCode = cells[1].textContent.trim();
 
-        const section = cells[5].textContent.trim();
+        const number = cells[5].textContent.trim();
         const dayTimeRoom = cells[6].textContent.trim();
-        const { days, startTimes, endTimes, roomNumbers } =
-            extractDayTimeRoom(dayTimeRoom);
+        const { theory, labs } = extractDayTimeRoom(dayTimeRoom);
 
         const existingCourse = result.find(
             (course) => course.courseCode === courseCode,
@@ -144,24 +124,21 @@ export function getClassroomsFromSchedule(html: string) {
                 courseCode,
                 sections: [
                     {
-                        section,
-                        days,
-                        startTimes,
-                        endTimes,
-                        roomNumbers,
+                        number,
+                        ...theory,
+                        lab: labs ? { ...labs } : undefined,
                     },
                 ],
             });
         else {
             existingCourse.sections.push({
-                section,
-                days,
-                startTimes,
-                endTimes,
-                roomNumbers,
+                number,
+                ...theory,
+                lab: labs ? { ...labs } : undefined,
             });
         }
     });
+    console.log(result);
     return result;
 }
 
