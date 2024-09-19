@@ -8,8 +8,8 @@ export enum Days {
     Friday,
 }
 
-export enum Times {
-    '08:00 AM' = 1,
+export const Times = [
+    '08:00 AM',
     '09:00 AM',
     '09:20 AM',
     '09:30 AM',
@@ -43,4 +43,4 @@ export enum Times {
     '08:40 PM',
     '09:00 PM',
     '09:30 PM',
-}
+];
