@@ -43,7 +43,7 @@ const features = [
         name: 'CGPA Calculator',
         description:
             'Calculate your CGPA and predict your future CGPA based on your grades.',
-        href: '/feature/cgpa-calculator',
+        href: '/features/cgpa-calculator',
         cta: 'CG 4.0 Hobe',
         background: <img className="absolute -right-20 -top-20 opacity-60" />,
         className: 'col-span-1',
