@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
                     return {
                         code: courseData.code,
                         title: courseData.title,
-                        faculty: section?.facultyName,
+                        faculty: section?.facultyInitial,
                         section: section?.section,
                         lab: section?.lab,
                     };

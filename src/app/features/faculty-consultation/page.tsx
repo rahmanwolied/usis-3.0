@@ -1,100 +1,133 @@
-"use client"; // Enable client-side rendering
+'use client'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import * as XLSX from 'xlsx';
+const API_KEY = 'AIzaSyDLcmUiq7FfA9C9Yb7SYhTRdnaEGjoKn00'; // Replace with your API key
+const SHEET_ID = '1IfxY7GOSX22sVN80aq_QccT515ImBSEcPDfGST8mEPA'; // Replace with your sheet ID
 
-// URL for the published XLSX file (replace with your own)
-const XLSX_URL = 'https://example.com/your-file.xlsx';  // Replace this with your published XLSX link
 
-// Helper function to fetch and parse XLSX data
-const fetchXLSXData = async (url: string): Promise<any[][]> => {
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-    const sheetName = workbook.SheetNames[0]; // Get the first sheet
-    const sheet = workbook.Sheets[sheetName];
-    return XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][];
-};
+interface Faculty {
+    initial: string;
+    name: string;
+    email: string;
+    consultationSlots: { day: string, time: string }[];
+}
 
-const App: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState(''); // Search by sheet name (faculty initials)
-    const [results, setResults] = useState<{ day: string; time: string }[]>([]);
+const FacultyConsultation: React.FC = () => {
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [facultyData, setFacultyData] = useState<Faculty | null>(null);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (searchTerm) {
-                setLoading(true);
-                setError('');
+    const fetchFacultyData = async () => {
+        try {
+            setLoading(true);
+            setFacultyData(null);
 
-                try {
-                    const sheetData = await fetchXLSXData(XLSX_URL);
+            // Fetch faculty details from the FacultyList (including URL in Column A and Initial in Column B)
+            const facultyListResponse = await axios.get(
+                `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/FacultyList!A1:F1000?key=${API_KEY}`
+            );
+            const facultyListData = facultyListResponse.data.values;
 
-                    if (!sheetData || sheetData.length === 0) {
-                        setResults([]);
-                        return;
-                    }
+            // Find the faculty row based on the initial entered in search
+            const facultyRow = facultyListData.find((row: string[]) => row[1]?.toLowerCase() === searchTerm.toLowerCase());
 
-                    const consultationHours: { day: string; time: string }[] = [];
-
-                    // Loop through days (rows 9 to 15)
-                    for (let i = 9; i <= 15; i++) {
-                        // Loop through time slots (columns B to J)
-                        for (let j = 1; j <= 9; j++) {
-                            if (sheetData[i][j] === 'Consultation') {
-                                consultationHours.push({
-                                    day: sheetData[i][0], // Column A (days of the week)
-                                    time: sheetData[8][j], // Row 8 (time slots)
-                                });
-                            }
-                        }
-                    }
-
-                    setResults(consultationHours);
-                } catch (error) {
-                    setError('Error fetching data from the spreadsheet');
-                } finally {
-                    setLoading(false);
-                }
+            if (!facultyRow) {
+                alert('Faculty not found');
+                setLoading(false);
+                return;
             }
-        };
 
-        fetchData();
-    }, [searchTerm]);
+            const facultyRoutineUrl = facultyRow[0]; // Routine URL or identifier in Column A
+            const initial = facultyRow[1]; // Initials in Column B
+            const name = facultyRow[2];    // Name in Column C
+            const email = facultyRow[5];   // Email in Column F
+
+            // Fetch routine for the specific faculty using the URL or identifier from Column A
+            const routineResponse = await axios.get(
+                `${facultyRoutineUrl}=${API_KEY}`
+            );
+
+
+            const routine = routineResponse.data.values;
+            console.log(routine);
+            // Find consultation slots dynamically in the routine
+            const consultationSlots = findConsultationSlots(routine);
+
+            // Set faculty data with consultation slots
+            setFacultyData({ initial, name, email, consultationSlots });
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching faculty data:', error);
+            setLoading(false);
+        }
+    };
+
+    // Function to dynamically find consultation slots based on 'Consultation' in the routine
+    const findConsultationSlots = (routine: string[][]) => {
+        const consultationSlots: { day: string, time: string }[] = [];
+
+        let days = routine[0]; // Assuming the first row contains the days of the week (e.g., 'Monday', 'Tuesday', etc.)
+
+        // Iterate over the rows to find consultation slots
+        for (let i = 1; i < routine.length; i++) {
+            const row = routine[i];
+            row.forEach((cell, index) => {
+                if (cell.toLowerCase().includes('consultation')) {
+                    const day = days[index]; // The day of the consultation
+                    const time = row[0];     // Assuming time is in the first column
+                    consultationSlots.push({ day, time });
+                }
+            });
+        }
+
+        return consultationSlots;
+    };
 
     return (
-        <div style={{ padding: '20px' }}>
-            <input
-                type="text"
-                placeholder="Search by Faculty Initial (e.g., ABY)"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value.toUpperCase())}
-                style={{ padding: '10px', fontSize: '16px', width: '100%' }}
-            />
+        <div className="container mx-auto p-4">
+            <h1 className="text-xl mb-4">Faculty Consultation Hours</h1>
+
+            <div className="flex mb-4">
+                <input
+                    type="text"
+                    placeholder="Enter faculty initial (e.g., ABW)"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="p-2 border rounded w-full mr-2"
+                />
+                <Button onClick={fetchFacultyData} className="p-2 bg-blue-500 text-white rounded">Search</Button>
+            </div>
 
             {loading && <p>Loading...</p>}
-            {error && <p>{error}</p>}
 
-            {results.length > 0 ? (
-                <div style={{ display: 'grid', gap: '10px', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', marginTop: '20px' }}>
-                    {results.map((item, index) => (
-                        <Card key={index}>
-                            <CardHeader>
-                                <CardTitle>{item.day}</CardTitle>
-                            </CardHeader>
-                            <CardFooter>
-                                <p>{item.time}</p>
-                            </CardFooter>
-                        </Card>
-                    ))}
+            {facultyData && (
+                <div>
+                    <FacultyCard faculty={facultyData} />
                 </div>
-            ) : (
-                !loading && searchTerm && <p>No consultation hours found for "{searchTerm}".</p>
             )}
         </div>
     );
 };
 
-export default App;
+const FacultyCard: React.FC<{ faculty: Faculty }> = ({ faculty }) => {
+    return (
+        <Card className="shadow-lg rounded-lg border p-4">
+            <CardHeader>
+                <CardTitle className="text-lg font-bold">{faculty.name} ({faculty.initial})</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p>Email: {faculty.email}</p>
+                <ul className="list-disc ml-4">
+                    {faculty.consultationSlots.map((slot, index) => (
+                        <li key={index}>{slot.day}: {slot.time}</li>
+                    ))}
+                </ul>
+            </CardContent>
+        </Card>
+    );
+};
+
+export default FacultyConsultation;

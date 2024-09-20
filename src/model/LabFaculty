@@ -1,0 +1,29 @@
+import mongoose, { Schema, Document } from 'mongoose';
+
+interface Course extends Document {
+    courseCode: string;
+    theoryInitial: string;
+    theoryDay: string;
+    theoryTime: string;
+    theoryRoom: string;
+    labInitial: string;
+    labDay: string;
+    labTime: string;
+    labRoom: string;
+}
+
+const courseSchema = new Schema<Course>({
+    courseCode: { type: String, required: true },
+    theoryInitial: { type: String, required: false },
+    theoryDay: { type: String, required: false },
+    theoryTime: { type: String, required: false },
+    theoryRoom: { type: String, required: false },
+    labInitial: { type: String, required: false },
+    labDay: { type: String, required: false },
+    labTime: { type: String, required: false },
+    labRoom: { type: String, required: false },
+});
+
+const CourseModel = mongoose.model<Course>('Course', courseSchema);
+
+export default CourseModel;
