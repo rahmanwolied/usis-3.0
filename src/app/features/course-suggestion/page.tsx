@@ -1,70 +1,112 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import UsisSDK from '@/services/usis-sdk';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
 import { parse } from 'node-html-parser';
 
+import dbConnect from '@/lib/dbConnect';
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { allCourses } from './all-courses';
 import { prereq } from './prereq';
 
-export default async function Page() {
-    const usis = new UsisSDK();
-    const data = await usis.showGradesheet();
-    const root = parse(data);
+type CourseSuggestion = {
+    course: string;
+    softPreRequisites: string[];
+}[];
 
-    const table = root.querySelector('.previous-result-table');
-    const rows = table!.querySelectorAll('tr');
+export default function Page() {
+    // const usis = new UsisSDK();
 
-    const courseRows = rows.filter((row) => {
-        const columns = row.querySelectorAll('td');
-        return columns.length > 0 && columns[0].text.trim().match(/[A-Z]{3}\d{3}/);
-    });
+    // const data = await usis.showGradesheet();
+    // const root = parse(data);
 
-    const courses = courseRows.map((row) => {
-        const columns = row.querySelectorAll('td');
-        return columns[0].text.trim();
-    });
+    // const table = root.querySelector('.previous-result-table');
+    // const rows = table!.querySelectorAll('tr');
 
-    const advisedCoursesRes = await usis.getAdvisedCourse();
-    const root2 = parse(advisedCoursesRes);
-    const table2 = root2.getElementsByTagName('table')[0];
-    const rows2 = table2.querySelectorAll('tr');
-    const advisedCourseRows = rows2.filter((row) => {
-        const columns = row.querySelectorAll('td');
-        return columns.length > 0 && columns[0].text.trim().match(/[A-Z]{3}\d{3}/);
-    });
+    // const courseRows = rows.filter((row) => {
+    //     const columns = row.querySelectorAll('td');
+    //     return (
+    //         columns.length > 0 && columns[0].text.trim().match(/[A-Z]{3}\d{3}/)
+    //     );
+    // });
 
-    const advisedCourses = advisedCourseRows.map((row) => {
-        const columns = row.querySelectorAll('td');
-        return columns[0].text.trim();
-    });
-    console.log(advisedCourses);
-    const mergedCourses = [...courses, ...advisedCourses];
-    console.log(mergedCourses);
-    const suggestions = allCourses.filter((course) => !mergedCourses.includes(course));
+    // const courses = courseRows.map((row) => {
+    //     const columns = row.querySelectorAll('td');
+    //     return columns[0].text.trim();
+    // });
 
-    const suggestedCourses = prereq.courses
-        .filter((courseItem) => {
-            // Check if all hard prerequisites are in the courses array
-            return courseItem.hard_pre_requisite.every((prereqCourse) => courses.includes(prereqCourse));
-        })
-        .map((courseItem) => courseItem.course) // Extract only the course names
-        .filter((course) => !courses.includes(course)); // Remove courses that are already in the courses array
+    // const advisedCoursesRes = await usis.getAdvisedCourse();
+    // const root2 = parse(advisedCoursesRes);
+    // const table2 = root2.getElementsByTagName('table')[0];
+    // const rows2 = table2.querySelectorAll('tr');
+    // const advisedCourseRows = rows2.filter((row) => {
+    //     const columns = row.querySelectorAll('td');
+    //     return (
+    //         columns.length > 0 && columns[0].text.trim().match(/[A-Z]{3}\d{3}/)
+    //     );
+    // });
 
-    console.log(suggestedCourses);
+    // const advisedCourses = advisedCourseRows.map((row) => {
+    //     const columns = row.querySelectorAll('td');
+    //     return columns[0].text.trim();
+    // });
+    // console.log(advisedCourses);
 
-    const validSuggestions = suggestedCourses
-        .filter((course) => allCourses.includes(course)) // Keep only courses present in allCourses
-        .filter((course) => !advisedCourses.includes(course)); // Remove courses that are also in advisedCourses
-    console.log(validSuggestions);
+    // console.log(mergedCourses);
+    const [detailedSuggestions, setDetailedSuggestions] =
+        useState<CourseSuggestion>([]);
+    const { data: session } = useSession();
 
-    // Generate an array with soft prerequisites information
-    const detailedSuggestions = validSuggestions.map((course) => {
-        const courseDetails = prereq.courses.find((c) => c.course === course);
-        return {
-            course,
-            softPreRequisites: courseDetails ? courseDetails.soft_pre_requisite : [],
-        };
-    });
+    useEffect(() => {
+        async function fetchData() {
+            const res = await axios.post('/api/users/courses', {
+                email: session?.user.email,
+            });
+
+            const { courses, advisedCourses } = res.data.data;
+
+            const mergedCourses = [...courses, ...advisedCourses];
+
+            const suggestions = allCourses.filter(
+                (course) => !mergedCourses.includes(course),
+            );
+
+            const suggestedCourses = prereq.courses
+                .filter((courseItem) => {
+                    // Check if all hard prerequisites are in the courses array
+                    return courseItem.hard_pre_requisite.every((prereqCourse) =>
+                        courses.includes(prereqCourse),
+                    );
+                })
+                .map((courseItem) => courseItem.course) // Extract only the course names
+                .filter((course) => !courses.includes(course)); // Remove courses that are already in the courses array
+
+            console.log(suggestedCourses);
+
+            const validSuggestions = suggestedCourses
+                .filter((course) => allCourses.includes(course)) // Keep only courses present in allCourses
+                .filter((course) => !advisedCourses.includes(course)); // Remove courses that are also in advisedCourses
+            console.log(validSuggestions);
+
+            // Generate an array with soft prerequisites information
+            const detailedSuggestions = validSuggestions.map((course) => {
+                const courseDetails = prereq.courses.find(
+                    (c) => c.course === course,
+                );
+                return {
+                    course,
+                    softPreRequisites: courseDetails
+                        ? courseDetails.soft_pre_requisite
+                        : [],
+                };
+            });
+            setDetailedSuggestions(detailedSuggestions);
+        }
+        fetchData();
+    }, [session]);
 
     return (
         <div className="mt-10">
@@ -80,9 +122,11 @@ export default async function Page() {
                                 <div>
                                     <h3>Soft Prerequisites:</h3>
                                     <ul>
-                                        {detail.softPreRequisites.map((prereq, idx) => (
-                                            <li key={idx}>{prereq}</li>
-                                        ))}
+                                        {detail.softPreRequisites.map(
+                                            (prereq, idx) => (
+                                                <li key={idx}>{prereq}</li>
+                                            ),
+                                        )}
                                     </ul>
                                 </div>
                             ) : (
