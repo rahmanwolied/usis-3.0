@@ -109,11 +109,6 @@ export function combineCourseInfo(
             }
         }
 
-        // if (minimizedSectionInfo) {
-        //     if (!sectionInfo.roomNumber)
-        //         console.log('No room number for', courseCode, section);
-        // }
-
         const reliableRoomInfo = roomInfoReliable
             .find((course) => course.code === courseCode)
             ?.sections.find(
@@ -162,8 +157,17 @@ export function combineCourseInfo(
             return;
         }
 
-        addedCourse.sections.push(sectionInfo);
-        addedCourse.sections.sort((a, b) => a.sectionId - b.sectionId);
+        const addedSection = addedCourse.sections.find(
+            (_section) => _section.sectionId === sectionId,
+        );
+
+        if (!addedSection) {
+            addedCourse.sections.push(sectionInfo);
+            addedCourse.sections.sort((a, b) => a.sectionId - b.sectionId);
+            return;
+        } else if (hasLab) {
+            addedSection.lab = tempLabInfo;
+        }
 
         if (!addedCourse.faculties.includes(facultyInitial))
             addedCourse.faculties.push(facultyInitial);
