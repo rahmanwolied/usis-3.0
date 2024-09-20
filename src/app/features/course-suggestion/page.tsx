@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import UsisSDK from '@/services/usis-sdk';
-import axios from 'axios';
-import { useSession } from 'next-auth/react';
-import { parse } from 'node-html-parser';
 
-import dbConnect from '@/lib/dbConnect';
-import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { useSession } from "next-auth/react"
+
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 import { allCourses } from './all-courses';
 import { prereq } from './prereq';
