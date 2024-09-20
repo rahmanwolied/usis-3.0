@@ -2,13 +2,22 @@ import { Days, Times } from '@/enums';
 
 import { Section } from '@/types/usisReponse.type';
 import { cn } from '@/lib/utils';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 
 export function SectionsInfo({ sections }: { sections: Section[] }) {
     return (
         <>
             {sections.map((section, index) => (
-                <TableRow key={index} className={cn({ 'bg-destructive': section.closed })}>
+                <TableRow
+                    key={index}
+                    className={cn({ 'bg-destructive': section.closed })}>
                     <TableCell>
                         <Table>
                             <TableHeader>
@@ -17,17 +26,21 @@ export function SectionsInfo({ sections }: { sections: Section[] }) {
                                     <TableCell>{section.section}</TableCell>
                                     <TableHead></TableHead>
                                     {section.days.map((day, index) => (
-                                        <TableHead key={index}>{Days[day]}</TableHead>
+                                        <TableHead key={index}>{day}</TableHead>
                                     ))}
                                 </TableRow>
                             </TableHeader>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Faculty</TableHead>
-                                    <TableCell>{section.facultyInitial}</TableCell>
+                                    <TableCell>
+                                        {section.facultyInitial}
+                                    </TableCell>
                                     <TableHead>Start</TableHead>
-                                    {section.startTime.map((time, index) => (
-                                        <TableCell key={index}>{Times[time]}</TableCell>
+                                    {section.startTimes.map((time, index) => (
+                                        <TableCell key={index}>
+                                            {time}
+                                        </TableCell>
                                     ))}
                                 </TableRow>
                             </TableHeader>
@@ -36,8 +49,10 @@ export function SectionsInfo({ sections }: { sections: Section[] }) {
                                     <TableHead>Room</TableHead>
                                     <TableCell>{section.roomNumber}</TableCell>
                                     <TableHead>End</TableHead>
-                                    {section.endTime.map((time, index) => (
-                                        <TableCell key={index}>{Times[time]}</TableCell>
+                                    {section.endTimes.map((time, index) => (
+                                        <TableCell key={index}>
+                                            {time}
+                                        </TableCell>
                                     ))}
                                 </TableRow>
                             </TableHeader>

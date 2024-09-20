@@ -1,15 +1,24 @@
 import { Days, Times } from '@/enums';
 
-export interface USISResponseType {
+export interface USISResponseType<T> {
     page: number;
     total: number;
     records: number;
+    rows: T[];
 }
-export interface UsisScheduleResponseType extends USISResponseType {
-    rows: UsisScheduleType[];
-}
-export interface UsisScheduleType {
-    cell: [RowCount, SectionID, CourseCode, FacultyInitial, CourseSection, CourseDay, StartTime, EndTime, RoomNumber];
+
+export interface ClassSchedule {
+    cell: [
+        RowCount,
+        SectionID,
+        CourseCode,
+        FacultyInitial,
+        CourseSection,
+        CourseDay,
+        StartTime,
+        EndTime,
+        RoomNumber,
+    ];
     class: string;
     id: SectionID;
 }
@@ -19,8 +28,11 @@ export interface Course {
     tarc: boolean;
     title?: string;
     rating?: number;
+    faculties: FacultyInitial[];
     reviews?: CourseReview[];
     sections: Section[];
+    department?: string;
+    program?: string;
 }
 export interface CourseReview {
     reviewer: Username;
@@ -28,24 +40,44 @@ export interface CourseReview {
     hearts: number;
 }
 export interface Section {
-    number: SectionID;
+    sectionId: number;
     section: string;
-    days: Days[];
-    startTime: Times[];
-    endTime: Times[];
-    roomNumber: RoomNumber;
-    facultyInitial: FacultyInitial;
-    facultyName?: string;
+    days: string[];
+    startTimes: string[];
+    endTimes: string[];
+    roomNumber: string;
+    facultyInitial: string;
     closed: boolean;
+    facultyName?: string;
+    examDate?: string;
+    examDay?: string;
+    seats?: number;
+    seatsRemaining?: number;
+    lab?: LabSection;
 }
 
+export type LabSection = {
+    days: string[];
+    startTimes: string[];
+    endTimes: string[];
+    roomNumber: string;
+    facultyInitials?: string[];
+    facultyNames?: string[];
+};
 type Username = string;
 type RowCount = string;
 type SectionID = string | number;
 type CourseCode = string;
 type FacultyInitial = string;
 type CourseSection = string;
-type CourseDay = 'Saturday' | 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday';
+type CourseDay =
+    | 'Saturday'
+    | 'Sunday'
+    | 'Monday'
+    | 'Tuesday'
+    | 'Wednesday'
+    | 'Thursday'
+    | 'Friday';
 type StartTime =
     | '08:00 AM'
     | '09:00 AM'
@@ -85,45 +117,35 @@ type EndTime =
     | '12:00 PM'
     | '12:05 PM'
     | '12:20 PM';
-type RoomNumber = string | null;
+type RoomNumber = string;
 
-/*
-const scheduleData = {
-    page: 1,
-    total: 1,
-    records: 3421,
-    rows: [
-        {
-            cell: [
-                '1',
-                '2305399',
-                'ACT201',
-                'TBA',
-                '07',
-                'Monday',
-                '05:00 PM',
-                '06:20 PM',
-                'UB20802',
-            ],
-            class: 'com.docu.common.GridEntity',
-            id: 2305399,
-        },
-        {
-            cell: [
-                '2',
-                '2305396',
-                'ACT201',
-                'AFZ',
-                '04',
-                'Tuesday',
-                '02:00 PM',
-                '03:20 PM',
-                'UB20702',
-            ],
-            class: 'com.docu.common.GridEntity',
-            id: 2305396,
-        },
-    ],
-};
+export interface ClassScheduleWithLabs {
+    cell: [
+        RowCount, // "1" -> Index of the row
+        CourseCode, // "CSE471" -> Course Code
+        CourseTitle, // "SYSTEM ANALYSIS AND DESIGN" -> Course Title
+        SectionNumber, // "09" or "09-Closed" -> Section number or closed indicator
+        Seats, // 0 -> Seats available
+        Department, // "DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING" -> Department
+        Program, // "CSE" -> Program name
+        string, // "To Be Appointed" -> Faculty name
+        string, // "TBA" -> Faculty Initials
+        string | undefined, // undefined or "07-09-2024" -> Exam date
+        string | undefined, // undefined or "MW Day 1 (07-09-2024)(04:30 PM-06:30 PM)" -> Exam day and time
+        string | undefined, // "03:30 PM-04:50 PM02:00 PM-03:20 PM" -> Class timing for Sunday or undefined
+        string | undefined, // undefined -> Class timing for Monday or undefined
+        string | undefined, // undefined -> Class timing for Tuesday or undefined
+        string | undefined, // undefined -> Class timing for Wednesday or undefined
+        string | undefined, // undefined -> Class timing for Thursday or undefined
+        string | undefined, // undefined -> Class timing for Friday or undefined
+        string | undefined, // undefined -> Class timing for Saturday or null
+    ];
+    class: string;
+    id: string | null;
+}
 
-*/
+type CourseTitle = string;
+type SectionNumber = string;
+type Seats = number;
+type Department = string;
+type Program = string;

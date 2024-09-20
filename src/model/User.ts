@@ -1,14 +1,23 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-import { courseSchema } from './Schedule';
-
-interface Grade extends Document {
+interface Grade {
     courseCode: string;
     courseTitle: string;
     credit: string;
     creditEarned: string;
     grade: string;
     gradePoint: string;
+}
+
+interface AdvisedCourses {
+    code: string;
+    section: string;
+}
+
+interface Class {
+    code: string;
+    theorySection: number;
+    labSection: number;
 }
 
 export interface User extends Document {
@@ -24,22 +33,38 @@ export interface User extends Document {
     verifyCodeExpiration: Date | null;
     resetPasswordCode?: string | null;
     resetPasswordCodeExpiration?: Date | null;
-    schedule: Schema.Types.ObjectId;
-    grades: { courseCode: string; courseTitle: string; credit: string; creditEarned: string; grade: string; gradePoint: string }[];
-    advisedCourses: {
-        code: string;
-        title: string;
-        section: string;
-        faculty: string;
-        credit: string;
-    }[];
+    grades: Grade[];
+    advisedCourses: AdvisedCourses[];
     isUsisConnected: boolean;
     program: string;
     studentId: string;
     mobile: string;
-    homePhone: string;
     bloodGroup: string;
+    classes: Class[];
 }
+
+const gradeSchema = new Schema({
+    courseCode: String,
+    courseTitle: String,
+    credit: String,
+    creditEarned: String,
+    grade: String,
+    gradePoint: String,
+});
+
+const advisedCoursesSchema = new Schema({
+    code: String,
+    title: String,
+    section: String,
+    faculty: String,
+    credit: String,
+});
+
+const classSchema = new Schema({
+    code: String,
+    theorySection: Number,
+    labSection: Number,
+});
 
 export const userSchema: Schema<User> = new Schema({
     name: String,
@@ -47,11 +72,22 @@ export const userSchema: Schema<User> = new Schema({
         type: String,
         required: [true, 'Please provide a username'],
         unique: true,
+        index: true,
+        trim: true,
     },
     email: {
         type: String,
         required: [true, 'Please provide an email'],
         unique: true,
+        index: true,
+        trim: true,
+        lowercase: true,
+    },
+    studentId: {
+        type: String,
+        required: false,
+        unique: true,
+        index: true,
     },
     image: {
         type: String,
@@ -73,51 +109,35 @@ export const userSchema: Schema<User> = new Schema({
         default: false,
     },
     verifyCode: {
-        type: String || null,
+        type: String,
+        default: null,
     },
     verifyCodeExpiration: {
-        type: Date || null,
+        type: Date,
+        default: null,
     },
     resetPasswordCode: {
-        type: String || null,
+        type: String,
+        default: null,
     },
     resetPasswordCodeExpiration: {
-        type: Date || null,
+        type: Date,
+        default: null,
     },
-    schedule: {
-        type: Schema.Types.ObjectId,
-        ref: 'Schedule',
-    },
-    grades: [
-        {
-            courseCode: String,
-            courseTitle: String,
-            credit: String,
-            creditEarned: String,
-            grade: String,
-            gradePoint: String,
-        },
-    ],
-    advisedCourses: [
-        {
-            code: String,
-            title: String,
-            section: String,
-            faculty: String,
-            credit: String,
-        },
-    ],
+    grades: [gradeSchema],
+    advisedCourses: [advisedCoursesSchema],
+    classes: [classSchema],
     isUsisConnected: {
         type: Boolean,
         default: false,
     },
     program: String,
-    studentId: String,
     mobile: String,
-    homePhone: String,
     bloodGroup: String,
 });
 
-const UserModel = (mongoose.models?.User as mongoose.Model<User>) || mongoose.model<User>('User', userSchema);
+const UserModel =
+    (mongoose.models?.User as mongoose.Model<User>) ||
+    mongoose.model<User>('User', userSchema);
 
 export default UserModel;
