@@ -27,6 +27,62 @@ const fetchRoomAvailabilities = async () => {
         '3:30 PM - 4:50 PM': false,
       },
     },
+    {
+      roomNumber: '10C-28C',
+      availability: {
+        '8:00 AM - 9:20 AM': true,
+        '9:30 AM - 10:50 AM': false,
+        '11:00 AM - 12:20 PM': true,
+        '12:30 PM - 1:50 PM': false,
+        '2:00 PM - 3:20 PM': false,
+        '3:30 PM - 4:50 PM': true,
+      },
+    },
+    {
+      roomNumber: '10A-05C',
+      availability: {
+        '8:00 AM - 9:20 AM': false,
+        '9:30 AM - 10:50 AM': true,
+        '11:00 AM - 12:20 PM': true,
+        '12:30 PM - 1:50 PM': false,
+        '2:00 PM - 3:20 PM': true,
+        '3:30 PM - 4:50 PM': false,
+      },
+    },
+    {
+      roomNumber: '10G-34L',
+      availability: {
+        '8:00 AM - 9:20 AM': true,
+        '9:30 AM - 10:50 AM': false,
+        '11:00 AM - 12:20 PM': false,
+        '12:30 PM - 1:50 PM': true,
+        '2:00 PM - 3:20 PM': false,
+        '3:30 PM - 4:50 PM': true,
+      },
+    },
+    {
+      roomNumber: '7B-19L',
+      availability: {
+        '8:00 AM - 9:20 AM': false,
+        '9:30 AM - 10:50 AM': true,
+        '11:00 AM - 12:20 PM': false,
+        '12:30 PM - 1:50 PM': true,
+        '2:00 PM - 3:20 PM': false,
+        '3:30 PM - 4:50 PM': false,
+      },
+    },
+    {
+      roomNumber: '9H-36C',
+      availability: {
+        '8:00 AM - 9:20 AM': true,
+        '9:30 AM - 10:50 AM': true,
+        '11:00 AM - 12:20 PM': false,
+        '12:30 PM - 1:50 PM': true,
+        '2:00 PM - 3:20 PM': false,
+        '3:30 PM - 4:50 PM': true,
+      },
+    }
+    
   ];
 };
 
@@ -47,9 +103,9 @@ const generateTimeSlots = () => {
   let startHour = 8;
   let startMinutes = 0;
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 6; i++) {
     const formattedStart = formatTime(startHour, startMinutes);
-    const endMinutes = startMinutes + 80; // 1 hour 20 min class
+    const endMinutes = startMinutes + 80; 
     const endHour = startHour + Math.floor(endMinutes / 60);
     const endMinutesMod = endMinutes % 60;
     const formattedEnd = formatTime(endHour, endMinutesMod);
