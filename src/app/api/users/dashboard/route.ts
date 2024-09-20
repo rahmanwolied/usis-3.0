@@ -8,7 +8,7 @@ import dbConnect from '@/lib/dbConnect';
 export async function POST(req: NextRequest) {
     await dbConnect();
     const { email } = await req.json();
-
+    console.log(email)
     try {
         // Fetch the user's advised courses
 
