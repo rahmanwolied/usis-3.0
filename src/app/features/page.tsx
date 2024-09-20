@@ -14,7 +14,7 @@ const features = [
         name: 'Course Suggestions',
         description:
             'Get personalized course suggestions based on your degree requirements.',
-        href: '/features/course-suggestions',
+        href: '/features/course-suggestion',
         cta: 'Get started',
         background: <img className="absolute -right-20 -top-20 opacity-60" />,
         className: '',
