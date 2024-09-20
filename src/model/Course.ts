@@ -2,9 +2,9 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 import { Course, LabSection, Section } from '@/types/usisReponse.type';
 
-export interface CourseModel extends Document, Course {}
-export interface SectionModel extends Document, Section {}
-interface LabModel extends Document, LabSection {}
+export interface CourseModel extends Document, Course { }
+export interface SectionModel extends Document, Section { }
+interface LabModel extends Document, LabSection { }
 
 const labSectionSchema = new Schema<LabModel>({
     days: [String],
