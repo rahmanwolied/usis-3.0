@@ -7,7 +7,7 @@ interface CustomError extends Error {
 class ApiClient {
     private client: AxiosInstance;
     private cookie: { jsessionid: string; srvname: string } = {
-        jsessionid: '764B30EFBB29FF64BDC06C0D10DA1EE4',
+        jsessionid: '80437516F0A5F12E3E0AE23A4C06677C',
         srvname: 'USISQXX',
     };
 

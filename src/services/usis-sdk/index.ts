@@ -15,11 +15,11 @@ export default class UsisSDK {
         return response.data;
     }
 
-    async getClassSchedule(courseCode?: string, academiaSession: string = '627124') {
+    async getClassSchedule(courseCode?: string, academiaSession: string = '627124', rows = 50) {
         const params = {
             _search: false,
             nd: '',
-            rows: 50,
+            rows: rows,
             page: 1,
             sidx: '',
             sord: 'asc',

@@ -2,7 +2,6 @@
     "endOfLine": "lf",
     "semi": true,
     "singleQuote": true,
-    "printWidth": 150,
     "bracketSameLine": true,
     "tabWidth": 4,
     "importOrder": [

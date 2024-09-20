@@ -30,7 +30,6 @@ export const formatGradesheet = (gradesheetRes: string) => {
     const rows = table!.querySelectorAll('tr');
     rows.shift();
 
-    // if row has style value of style="background-color: #ccc;", skip
     const courseRows = rows.filter((row) => {
         console.log(typeof row.getAttribute('style'));
         if (typeof row.getAttribute('style') === 'undefined') return true;
