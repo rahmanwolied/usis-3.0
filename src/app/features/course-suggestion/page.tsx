@@ -44,20 +44,20 @@ export default async function Page() {
 
     const suggestedCourses = prereq.courses
         .filter((courseItem) => {
-            // Check if all hard prerequisites are in the courses array
+            // HP handle
             return courseItem.hard_pre_requisite.every((prereqCourse) => courses.includes(prereqCourse));
         })
-        .map((courseItem) => courseItem.course) // Extract only the course names
-        .filter((course) => !courses.includes(course)); // Remove courses that are already in the courses array
+        .map((courseItem) => courseItem.course) // CN extraxt
+        .filter((course) => !courses.includes(course)); // rmv courses
 
     console.log(suggestedCourses);
 
     const validSuggestions = suggestedCourses
-        .filter((course) => allCourses.includes(course)) // Keep only courses present in allCourses
-        .filter((course) => !advisedCourses.includes(course)); // Remove courses that are also in advisedCourses
+        .filter((course) => allCourses.includes(course)) // check all course
+        .filter((course) => !advisedCourses.includes(course)); //rmv advised course
     console.log(validSuggestions);
 
-    // Generate an array with soft prerequisites information
+    // SP handle
     const detailedSuggestions = validSuggestions.map((course) => {
         const courseDetails = prereq.courses.find((c) => c.course === course);
         return {
