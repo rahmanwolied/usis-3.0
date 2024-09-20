@@ -15,28 +15,28 @@ const features = [
         description:
             'Get personalized course suggestions based on your degree requirements.',
         href: '/features/course-suggestion',
-        cta: 'Get started',
+        cta: 'Lets Go',
         background: <img className="absolute -right-20 -top-20 opacity-60" />,
-        className: '',
+        className: 'col-span-1',
     },
     {
         Icon: InputIcon,
         name: 'Find Empty Classrooms',
         description: 'Find empty classrooms and study spaces on campus.',
         href: '/features/empty-class-finder',
-        cta: 'Learn more',
+        cta: 'Find',
         background: <img className="absolute -right-20 -top-20 opacity-60" />,
-        className: '',
+        className: 'col-span-1',
     },
     {
         Icon: CalendarIcon,
         name: 'Class Scheduler',
         description:
             'Schedule your classes in a visual calendar with additional features.',
-        href: '/',
-        cta: 'Learn more',
+        href: '/features/class-scheduler',
+        cta: 'Make it yourself',
         background: <img className="absolute -right-20 -top-20 opacity-60" />,
-        className: '',
+        className: 'col-span-1',
     },
     {
         Icon: CalculatorIcon,
@@ -44,18 +44,20 @@ const features = [
         description:
             'Calculate your CGPA and predict your future CGPA based on your grades.',
         href: '/feature/cgpa-calculator',
-        cta: 'Learn more',
+        cta: 'CG 4.0 Hobe',
         background: <img className="absolute -right-20 -top-20 opacity-60" />,
-        className: '',
+        className: 'col-span-1',
     },
 ];
 
 export default async function BentoDemo() {
     return (
-        <BentoGrid className="lg:grid-rows-3">
-            {features.map((feature) => (
-                <BentoCard key={feature.name} {...feature} />
-            ))}
-        </BentoGrid>
+        <div className="container px-20 py-5">
+            <BentoGrid className="grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+                {features.map((feature) => (
+                    <BentoCard key={feature.name} {...feature} />
+                ))}
+            </BentoGrid>
+        </div>
     );
 }
