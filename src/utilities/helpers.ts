@@ -1,16 +1,14 @@
 import { Times } from '@/enums';
 
-import { UsisScheduleResponseType } from '@/types/usisReponse.type';
-
 // Just to get all the unique start and end times for writing the types
-function sortTimes(response: UsisScheduleResponseType): void {
+function sortTimes(response: any): void {
     const AMtimes: string[] = [];
     const PMtimes: string[] = [];
 
     const startTimes: string[] = [];
     const endTimes: string[] = [];
 
-    const timePairs = response.rows.forEach((row) => {
+    const timePairs = response.rows.forEach((row: any) => {
         let [
             rowCount,
             id,
@@ -82,10 +80,14 @@ export function extractAndCombineTimes(timeString: string) {
         const endTime = Math.max(
             ...endTimes.map((time) => Times.indexOf(time)),
         );
-        return { startTime: Times[startTime], endTime: Times[endTime] };
+        return {
+            startTime: Times[startTime],
+            endTime: Times[endTime],
+            lab: true,
+        };
     }
 
-    return { startTime: startTimes[0], endTime: endTimes[0] };
+    return { startTime: startTimes[0], endTime: endTimes[0], lab: false };
 }
 
 export function extractDayTimeRoom(scheduleString: string) {
@@ -112,7 +114,7 @@ export function extractDayTimeRoom(scheduleString: string) {
     }
 
     const theory = matches
-        .filter((match) => match.room.slice(-1) === 'C')
+        .filter((match) => isTheory(match.room))
         .reduce(
             (acc, curr) => {
                 acc.days.push(curr.day);
@@ -129,11 +131,11 @@ export function extractDayTimeRoom(scheduleString: string) {
             },
         );
 
-    if (matches.filter((match) => match.room.slice(-1) === 'L').length === 0)
+    if (matches.filter((match) => isLab(match.room)).length === 0)
         return { theory, labs: undefined };
 
     const labs = matches
-        .filter((match) => match.room.slice(-1) === 'L')
+        .filter((match) => isLab(match.room))
         .reduce(
             (acc, curr) => {
                 acc.days.push(curr.day);
@@ -160,8 +162,29 @@ export function extractDayTimeRoom(scheduleString: string) {
         labs.days = [labs.days[0]];
         labs.startTimes = [Times[startTime]];
         labs.endTimes = [Times[endTime]];
-        labs.roomNumber = labs.roomNumber[0];
+        labs.roomNumber = labs.roomNumber;
     }
 
     return { labs, theory };
+}
+
+export function extractLabRoomNumber(scheduleString: string) {
+    const regex =
+        /([A-Za-z]{2})\((\d{2}:\d{2} [APM]{2})-(\d{2}:\d{2} [APM]{2})-([A-Za-z0-9-]+)\)/g;
+    let rooms = [];
+    let match;
+
+    while ((match = regex.exec(scheduleString)) !== null) {
+        rooms.push(match[4]);
+    }
+    if (rooms.filter(isLab).length === 0) return undefined;
+    return rooms.filter(isLab)[0];
+}
+
+export function isLab(room: string) {
+    return room.slice(-1) === 'L' && room.slice(0, 2) !== 'UB';
+}
+
+export function isTheory(room: string) {
+    return room.slice(-1) === 'C' || room.slice(0, 2) === 'UB';
 }
