@@ -49,9 +49,13 @@ export function combineCourseInfo(
 
         const isTarc = section?.startsWith('S');
         const isClosed = section.includes('CLOSED');
-        const sectionId = Number(
-            section.replace('-CLOSED', '').replace('S', ''),
-        );
+        const sectionId = Number(section.replace(/\D/g, ''));
+        if (isNaN(sectionId)) {
+            console.warn(
+                `Invalid sectionId for course ${courseCode} and section ${section}`,
+            );
+        }
+
         let hasLab = false;
         const tempLabInfo: LabSection = {
             days: [],
