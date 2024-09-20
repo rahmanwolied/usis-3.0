@@ -7,15 +7,16 @@ interface CustomError extends Error {
 class ApiClient {
     private client: AxiosInstance;
     private cookie: { jsessionid: string; srvname: string } = {
-        jsessionid: '80437516F0A5F12E3E0AE23A4C06677C',
-        srvname: 'USISQXX',
+        jsessionid: 'ACA1C5A208188DE512ADCBD3C1B78701',
+        srvname: 'USISZXX',
     };
 
     constructor(cookie?: { jsessionid: string; srvname: string }) {
         this.client = axios.create({
             baseURL: 'https://usis.bracu.ac.bd/academia',
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.118 Safari/537.36',
+                'User-Agent':
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.118 Safari/537.36',
                 Cookie: `JSESSIONID=${cookie?.jsessionid ?? this.cookie?.jsessionid}; SRVNAME=${cookie?.srvname ?? this.cookie?.srvname}`,
             },
         });
@@ -23,7 +24,9 @@ class ApiClient {
         this.client.interceptors.response.use(
             (response) => response,
             (error) => {
-                const customError: CustomError = new Error(error.response?.data?.message || error.message);
+                const customError: CustomError = new Error(
+                    error.response?.data?.message || error.message,
+                );
                 customError.status = error.response?.status;
                 return Promise.reject(customError);
             },
@@ -58,8 +61,11 @@ class ApiClient {
         return this.client.delete(path);
     }
 
-    setSessionToken(cookie: { jsessionid: string; srvname: string } | undefined) {
-        this.client.defaults.headers.common['Cookie'] = `JSESSIONID=${cookie?.jsessionid}; SRVNAME=${cookie?.srvname}`;
+    setSessionToken(
+        cookie: { jsessionid: string; srvname: string } | undefined,
+    ) {
+        this.client.defaults.headers.common['Cookie'] =
+            `JSESSIONID=${cookie?.jsessionid}; SRVNAME=${cookie?.srvname}`;
     }
 }
 
