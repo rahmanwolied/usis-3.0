@@ -58,6 +58,7 @@ const FilteredCourses = ({
                 description: 'You have already selected this course',
                 variant: 'destructive',
             });
+            return;
         }
 
         if (selectedCourses.find((c) => c.startTimes === section.startTimes)) {
