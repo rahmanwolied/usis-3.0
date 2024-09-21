@@ -41,8 +41,8 @@ export default function HomePage() {
     const [bloodGroup, setBloodGroup] = useState('');
     const [program, setProgram] = useState('');
     const [user, setUser] = useState<any>({});
+    const [totalCredits, setTotalCredits] = useState(136);
 
-    const totalCredits = 136;
     const { data: session } = useSession();
 
     const calcCGPA = (grades: any) => {
@@ -88,6 +88,9 @@ export default function HomePage() {
                 setHomePhone(res.data.homePhone ?? '');
                 setBloodGroup(res.data.bloodGroup ?? '');
                 setProgram(res.data.program ?? '');
+                setTotalCredits(
+                    res.data.program.includes('ENGINEERING') ? 136 : 124,
+                );
                 setUser(res.data);
             }
         }
