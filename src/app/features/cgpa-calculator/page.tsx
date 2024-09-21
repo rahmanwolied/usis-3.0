@@ -21,18 +21,7 @@ export default function CGPACalculator() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null); 
 
  
-  const gradingScale: { [key: string]: number } = {
-    A: 4.0,
-    'A-': 3.7,
-    'B+': 3.3,
-    B: 3.0,
-    'B-': 2.7,
-    'C+': 2.3,
-    C: 2.0,
-    'C-': 1.7,
-    D: 1.0,
-    F: 0.0,
-  };
+
 
 
   const handleSemesterChange = (index: number, value: string) => {
@@ -51,7 +40,7 @@ export default function CGPACalculator() {
     const courses = semesters[semesterIndex].courses;
     return courses.some((course, index) => course.name.toLowerCase() === courseName.toLowerCase() && index !== courseIndex);
   };
-  // Handle changes for course details
+
   const handleCourseChange = (
     semesterIndex: number,
     courseIndex: number,
@@ -104,7 +93,7 @@ export default function CGPACalculator() {
     setSemesters(updatedSemesters);
   };
 
-  // Delete a course
+  
   const deleteCourse = (semesterIndex: number, courseIndex: number) => {
     const updatedSemesters = [...semesters];
     updatedSemesters[semesterIndex].courses.splice(courseIndex, 1);
