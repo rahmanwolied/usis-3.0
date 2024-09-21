@@ -16,10 +16,9 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(
             new URL(`/user/${token.username}/profile`, request.url),
         );
+    } else if (token === null && url.startsWith('/user')) {
+        return NextResponse.redirect(new URL('/login', request.url));
     }
-    // else if (token === null && url.startsWith('/user')) {
-    //     return NextResponse.redirect(new URL('/login', request.url));
-    // }
 }
 
 export const config = {
