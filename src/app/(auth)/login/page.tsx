@@ -53,7 +53,8 @@ export default function Login() {
                 const session = await getSession();
                 toast({
                     title: 'Success',
-                    description: "Login successful. You're being redirected to your profile",
+                    description:
+                        "Login successful. You're being redirected to your profile",
                 });
                 if (session?.user) {
                     router.push(`/user/${session.user.username}/profile`);
@@ -71,7 +72,9 @@ export default function Login() {
                 <div className="mx-auto grid gap-6">
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-3xl font-bold">Login</CardTitle>
+                            <CardTitle className="text-3xl font-bold">
+                                Login
+                            </CardTitle>
                             <CardDescription className="text-balance">
                                 Enter your email below to login to your account
                             </CardDescription>
@@ -83,7 +86,9 @@ export default function Login() {
                                         onSubmit={form.handleSubmit(onSubmit)}
                                         className="space-y-4">
                                         <LoginForm form={form}></LoginForm>
-                                        <Button type="submit" className="w-full">
+                                        <Button
+                                            type="submit"
+                                            className="w-full">
                                             {isSubmitting ? (
                                                 <Loader2 className="animate-spin" />
                                             ) : (
@@ -92,7 +97,9 @@ export default function Login() {
                                         </Button>
                                     </form>
                                 </Form>
-                                <Button variant="outline" onClick={() => signIn('google')}>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => signIn('google')}>
                                     Sign in with Google
                                 </Button>
                             </div>

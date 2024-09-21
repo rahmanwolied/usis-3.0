@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
     Bell,
     BookOpen,
@@ -17,8 +19,84 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 
+type CurrentCourse = {
+    code: string;
+    facultyName: string;
+    faculty: string;
+    section: string;
+    days: string[];
+    startTimes: string[];
+    endTimes: string[];
+    roomNumber: string;
+};
 export default function HomePage() {
+    const [currentCourses, setCurrentCourses] = useState<CurrentCourse[]>([]); // Add the type here
+    const [completedCredits, setCompletedCredits] = useState(0);
+    const [mounted, setMounted] = useState(false);
+    const [usisConnected, setUsisConnected] = useState(false);
+    const [id, setId] = useState('');
+    const [mobile, setMobile] = useState('');
+    const [homePhone, setHomePhone] = useState('');
+    const [bloodGroup, setBloodGroup] = useState('');
+    const [program, setProgram] = useState('');
+    const [user, setUser] = useState<any>({});
+
+    const totalCredits = 136;
     const { data: session } = useSession();
+
+    const calcCGPA = (grades: any) => {
+        let total = 0;
+        if (!grades) {
+            return '0.00';
+        }
+        for (const grade of grades) {
+            total += Number(grade.gradePoint);
+        }
+        return (total / grades.length).toFixed(2);
+    };
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const res = await axios.post('/api/users/dashboard', {
+                    email: session?.user.email,
+                });
+                setCurrentCourses(res.data.currentCourses); // Match advised courses with section details
+                setCompletedCredits(res.data.completedCredits); // Fetch completed credits
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        fetchData();
+    }, [session?.user?.email]);
+
+    useEffect(() => {
+        async function getUser() {
+            if (!session) {
+                return;
+            }
+            const res = await axios.get(
+                `/api/users/get-user?username=${session?.user?.username}`,
+            );
+            if (res?.data) {
+                console.log(res.data);
+                setUsisConnected(res.data.isUsisConnected);
+                setId(res.data.studentId ?? '');
+                setMobile(res.data.mobile ?? '');
+                setHomePhone(res.data.homePhone ?? '');
+                setBloodGroup(res.data.bloodGroup ?? '');
+                setProgram(res.data.program ?? '');
+                setUser(res.data);
+            }
+        }
+
+        if (session) {
+            getUser();
+        }
+        setMounted(true);
+    }, [session]);
+
     return (
         <div className="min-h-screen">
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -27,18 +105,24 @@ export default function HomePage() {
                         <CardHeader className="flex flex-row items-center space-x-4">
                             <Avatar className="h-16 w-16">
                                 <AvatarImage
-                                    src="/placeholder-avatar.jpg"
+                                    src={session?.user.image!}
                                     alt="Student"
                                 />
                                 <AvatarFallback>JD</AvatarFallback>
                             </Avatar>
-                            <div>
+                            <div className="flex flex-col gap-2">
                                 <CardTitle>{session?.user.name}</CardTitle>
                                 <p className="text-sm text-gray-500">
-                                    Computer Science, Year 3
+                                    {program}, Year{' '}
+                                    {Number(
+                                        new Date()
+                                            .getFullYear()
+                                            .toString()
+                                            .slice(2),
+                                    ) - Number(id.slice(0, 2))}
                                 </p>
                                 <p className="text-lg font-semibold">
-                                    CGPA: 4.00
+                                    CGPA: {calcCGPA(user.grades)}
                                 </p>
                             </div>
                         </CardHeader>
@@ -46,9 +130,21 @@ export default function HomePage() {
                             <div className="space-y-2">
                                 <div className="flex justify-between text-sm">
                                     <span>Degree Progress</span>
-                                    <span>75% (90/120 credits)</span>
+                                    <span>
+                                        {(
+                                            (completedCredits / totalCredits) *
+                                            100
+                                        ).toFixed(2)}
+                                        % ({completedCredits}/{totalCredits}{' '}
+                                        credits)
+                                    </span>
                                 </div>
-                                <Progress value={75} className="w-full" />
+                                <Progress
+                                    value={
+                                        (completedCredits / totalCredits) * 100
+                                    }
+                                    className="w-full"
+                                />
                             </div>
                         </CardContent>
                     </Card>

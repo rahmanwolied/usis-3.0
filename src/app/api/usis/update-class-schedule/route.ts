@@ -6,6 +6,7 @@ import {
     getLabRoomInfo,
     getRoomInfoReliable,
 } from '@/utilities/format-response';
+import { AxiosError } from 'axios';
 
 import { ApiResponse } from '@/types/ApiResponse.type';
 import { Course } from '@/types/usisReponse.type';
@@ -40,8 +41,8 @@ export async function POST(request: NextRequest) {
             status: 'success',
             code: 200,
         });
-    } catch (error) {
-        console.error(error);
+    } catch (error: any) {
+        console.error(error.message);
         return NextResponse;
     }
 }
