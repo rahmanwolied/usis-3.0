@@ -67,11 +67,11 @@ export default function Page() {
 
             const { courses, advisedCourses } = res.data.data;
 
-            const mergedCourses = [...courses, ...advisedCourses];
+            // const mergedCourses = [...courses, ...advisedCourses];
 
-            const suggestions = allCourses.filter(
-                (course) => !mergedCourses.includes(course),
-            );
+            // const suggestions = allCourses.filter(
+            //     (course) => !mergedCourses.includes(course),
+            // );
 
             const suggestedCourses = prereq.courses
                 .filter((courseItem) => {
