@@ -7,8 +7,8 @@ export const navigations = [
         icon: LucideBoxes,
     },
     {
-        name: 'Reviews',
-        url: '/reviews',
+        name: 'Dashboard',
+        url: '/features/dashboard',
         icon: LucideQuote,
     },
 ];

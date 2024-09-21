@@ -28,7 +28,7 @@ type CurrentCourse = {
 
 
 export default function Component() {
-  const [currentCourses, setCurrentCourses] = useState<CurrentCourse[]>([]); // Add the type here
+  const [currentCourses, setCurrentCourses] = useState<CurrentCourse[]>([]);
   const [completedCredits, setCompletedCredits] = useState(0);
   const totalCredits = 136;
   const { data: session } = useSession();
@@ -39,8 +39,8 @@ export default function Component() {
         const res = await axios.post('/api/users/dashboard', {
           email: session?.user.email,
         });
-        setCurrentCourses(res.data.currentCourses); // Match advised courses with section details
-        setCompletedCredits(res.data.completedCredits); // Fetch completed credits
+        setCurrentCourses(res.data.currentCourses);
+        setCompletedCredits(res.data.completedCredits);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -53,7 +53,7 @@ export default function Component() {
 
   return (
     <div className="container mx-auto space-y-8 p-4">
-      {/* Degree Progression */}
+
       <Card>
         <CardHeader>
           <CardTitle>Your Degree Progression</CardTitle>
@@ -74,7 +74,7 @@ export default function Component() {
         </CardContent>
       </Card>
 
-      {/* Currently Doing Courses */}
+      {/* Current Courses */}
       <Card>
         <CardHeader>
           <CardTitle>Currently Doing Courses</CardTitle>

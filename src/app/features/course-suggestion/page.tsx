@@ -2,12 +2,11 @@
 
 
 
-import { useEffect, useState } from "react"
-import axios from "axios"
-import { useSession } from "next-auth/react"
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { allCourses } from './all-courses';
 import { prereq } from './prereq';
@@ -76,22 +75,19 @@ export default function Page() {
 
             const suggestedCourses = prereq.courses
                 .filter((courseItem) => {
-                    // Check if all hard prerequisites are in the courses array
+
                     return courseItem.hard_pre_requisite.every((prereqCourse) =>
                         courses.includes(prereqCourse),
                     );
                 })
-                .map((courseItem) => courseItem.course) // Extract only the course names
-                .filter((course) => !courses.includes(course)); // Remove courses that are already in the courses array
-
+                .map((courseItem) => courseItem.course)
+                .filter((course) => !courses.includes(course));
             console.log(suggestedCourses);
 
             const validSuggestions = suggestedCourses
-                .filter((course) => allCourses.includes(course)) // Keep only courses present in allCourses
-                .filter((course) => !advisedCourses.includes(course)); // Remove courses that are also in advisedCourses
-            console.log(validSuggestions);
+                .filter((course) => allCourses.includes(course))
+                .filter((course) => !advisedCourses.includes(course));
 
-            // Generate an array with soft prerequisites information
             const detailedSuggestions = validSuggestions.map((course) => {
                 const courseDetails = prereq.courses.find(
                     (c) => c.course === course,
@@ -110,7 +106,7 @@ export default function Page() {
 
     return (
         <div className="mt-10">
-            <h1>Course Suggestion</h1>
+            <h1 className="text-3xl font-bold mb-6 text-center">Course Suggestions</h1>
             <div className="flex-grid container flex items-center justify-center gap-3">
                 {detailedSuggestions.map((detail, index) => (
                     <Card key={index} className="w-1/5">
