@@ -10,9 +10,26 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
 
 import CookieTutorial from './cookie-tutorial';
 
@@ -22,6 +39,7 @@ const schema = z.object({
 });
 
 export default function UsisLoginModal() {
+    const { toast } = useToast();
     const { data: session } = useSession();
 
     const [open, setOpen] = useState(false);
@@ -31,7 +49,9 @@ export default function UsisLoginModal() {
 
     useEffect(() => {
         const checkUsis = async () => {
-            const res = await axios.get(`/api/users/check-usis-connect?username=${session?.user?.username}`);
+            const res = await axios.get(
+                `/api/users/check-usis-connect?username=${session?.user?.username}`,
+            );
             if (res?.data.isUsisConnected) {
                 setOpen(false);
             } else {
@@ -48,10 +68,23 @@ export default function UsisLoginModal() {
 
     const onSubmit = async (data: z.infer<typeof schema>) => {
         try {
-            await axios.post('/api/users/connect-usis', { ...data, username: session?.user?.username });
+            await axios.post('/api/users/connect-usis', {
+                ...data,
+                username: session?.user?.username,
+            });
+            toast({
+                title: 'USIS Connected',
+                description: 'USIS connected successfully',
+                variant: 'success',
+            });
             setOpen(false);
         } catch (error) {
             console.error('Error connecting USIS:', error);
+            toast({
+                title: 'Error',
+                description: 'Error connecting USIS',
+                variant: 'destructive',
+            });
         }
     };
 
@@ -65,11 +98,15 @@ export default function UsisLoginModal() {
                     <DialogTitle>Enter USIS Cookie</DialogTitle>
                 </DialogHeader>
                 <DialogDescription>
-                    To access USIS, you need to provide your `JSESSIONID` and `SRVNAME` cookie values. Follow the tutorial below to get the values.
+                    To access USIS, you need to provide your `JSESSIONID` and
+                    `SRVNAME` cookie values. Follow the tutorial below to get
+                    the values.
                 </DialogDescription>
                 <CookieTutorial />
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="space-y-6">
                         <FormField
                             control={form.control}
                             name="jsessionid"
@@ -77,7 +114,11 @@ export default function UsisLoginModal() {
                                 <FormItem>
                                     <FormLabel>JSESSIONID</FormLabel>
                                     <FormControl>
-                                        <Input autoComplete="off" className="w-3/4" {...field} />
+                                        <Input
+                                            autoComplete="off"
+                                            className="w-3/4"
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -90,7 +131,11 @@ export default function UsisLoginModal() {
                                 <FormItem>
                                     <FormLabel>SRVNAME</FormLabel>
                                     <FormControl>
-                                        <Input autoComplete="off" className="w-3/4" {...field} />
+                                        <Input
+                                            autoComplete="off"
+                                            className="w-3/4"
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -100,7 +145,13 @@ export default function UsisLoginModal() {
                 </Form>
                 <DialogFooter className="flex w-full justify-center">
                     <Button onClick={() => setOpen(false)}>Cancel</Button>
-                    <Button onClick={form.handleSubmit(onSubmit)}>{isSubmitting ? <Loader2 className="animate-spin" /> : 'Submit'}</Button>
+                    <Button onClick={form.handleSubmit(onSubmit)}>
+                        {isSubmitting ? (
+                            <Loader2 className="animate-spin" />
+                        ) : (
+                            'Submit'
+                        )}
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
