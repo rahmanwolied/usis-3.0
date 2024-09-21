@@ -157,6 +157,9 @@ export function combineCourseInfo(
             return;
         }
 
+        if (!addedCourse.faculties.includes(facultyInitial))
+            addedCourse.faculties.push(facultyInitial);
+
         const addedSection = addedCourse.sections.find(
             (_section) => _section.sectionId === sectionId,
         );
@@ -168,9 +171,6 @@ export function combineCourseInfo(
         } else if (hasLab) {
             addedSection.lab = tempLabInfo;
         }
-
-        if (!addedCourse.faculties.includes(facultyInitial))
-            addedCourse.faculties.push(facultyInitial);
     });
     return courses;
 }
