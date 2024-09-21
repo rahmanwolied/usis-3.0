@@ -8,7 +8,7 @@ import dbConnect from '@/lib/dbConnect';
 export async function POST(req: NextRequest) {
     await dbConnect();
     const { email } = await req.json();
-
+    console.log(email)
     try {
         console.log('Fetching courses for:', email);
         const user = await UserModel.findOne({ email }).lean();
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
                     return {
                         code: courseData.code,
                         title: courseData.title,
-                        faculty: section?.facultyName,
+                        faculty: section?.facultyInitial,
                         section: section?.section,
                         lab: section?.lab,
                     };
